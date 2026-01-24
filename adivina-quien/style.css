@@ -5,23 +5,23 @@ body {
     background-image: url('fondo.png'); 
     background-size: cover; 
     background-position: center;
-    background-attachment: fixed; /* Fondo fijo al hacer scroll */
+    background-attachment: fixed;
     background-color: #2a2a2a; 
     color: white;
-    min-height: 100vh; 
+    min-height: 100vh;
     
-    /* Habilitar Scroll Vertical */
+    /* Habilitar scroll */
     overflow-y: auto; 
     overflow-x: hidden;
     
     display: flex; flex-direction: column;
 }
 
-/* Capa oscura para mejorar legibilidad */
 body::before {
     content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(3px); z-index: -1;
-    position: fixed; /* Fija la capa oscura también */
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(3px); z-index: -1;
+    position: fixed;
 }
 
 /* --- LOGIN --- */
@@ -38,119 +38,111 @@ button { padding: 15px; font-size: 14px; cursor: pointer; border: 4px solid whit
 
 .hidden { display: none !important; }
 
-/* --- ZONA SECRETA SUPERIOR (NUEVO DISEÑO) --- */
-#secret-zone {
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    gap: 60px; 
-    padding: 20px 0;
-    background: transparent; 
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.8); 
+
+/* --- NUEVA ZONA SUPERIOR DE CÁMARAS --- */
+#top-cameras-row {
+    display: flex;
+    justify-content: center; /* Las centramos para que no se vayan a las orillas */
+    gap: 365px; /* Espacio entre la cámara 1 y la 2 */
+    align-items: center;
+    width: 100%;
+    padding: 10px 20px;
+    margin-bottom: 5px;
 }
 
-.secret-card-container { 
+.cam-frame {
+    width: 35%; /* <--- TAMAÑO REDUCIDO AL 40% */
+    max-width: 700px;
+    aspect-ratio: 16 / 9;
+    background: rgba(0, 0, 0, 0.4);
+    border: 4px solid #555;
+    border-radius: 15px;
+    display: flex; justify-content: center; align-items: center;
+    color: #aaa; font-size: 14px; font-weight: bold;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+
+#cam-p1 { border-color: #3b4cca; box-shadow: 0 0 20px rgba(59, 76, 202, 0.3); }
+#cam-p2 { border-color: #ff5555; box-shadow: 0 0 20px rgba(255, 85, 85, 0.3); }
+.hidden-cam { visibility: hidden; } 
+
+
+/* --- TABLEROS Y ZONA CENTRAL --- */
+.boards-container {
+    display: flex; 
+    width: 100%;
+    padding: 0 20px 60px 20px; 
+    gap: 15px; 
+    justify-content: center;
+    align-items: center; 
+}
+
+.player-board-wrapper {
+    display: flex; flex-direction: column; align-items: center; 
+    flex: 1; 
+}
+
+/* --- ZONA CENTRAL VERTICAL (VS) --- */
+.center-targets {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
+    gap: 60px; /* <--- MÁS SEPARACIÓN ENTRE LOS OBJETIVOS (Antes 15px) */
+    flex-shrink: 0; 
+    min-width: 110px;
 }
 
+.secret-card-container { display: flex; flex-direction: column; align-items: center; }
 .secret-card-container p { 
-    margin-bottom: 10px; 
-    font-size: 12px; 
-    color: #ffcc00; 
-    font-weight: bold;
-    text-shadow: 2px 2px 0px #000;
-    background: rgba(0,0,0,0.6); 
-    padding: 5px 10px;
-    border-radius: 10px;
+    margin-bottom: 8px; font-size: 10px; color: #ffcc00; font-weight: bold;
+    text-shadow: 1px 1px 0 #000; background: rgba(0,0,0,0.6);
+    padding: 2px 8px; border-radius: 5px;
 }
 
-/* Estilo VS Animado */
 .vs-logo {
-    font-size: 40px;
-    font-weight: bold;
-    font-style: italic;
-    color: #ff5555;
-    text-shadow: 3px 3px 0px #fff, 6px 6px 0px #000;
+    font-size: 30px; font-weight: bold; font-style: italic; color: #ff5555;
+    text-shadow: 2px 2px 0px #fff, 4px 4px 0px #000;
+    margin: 5px 0;
     animation: popIn 1s infinite alternate;
 }
 
-/* ESTILOS DE LA CARTA SECRETA (INCÓGNITA) */
-
-/* 1. Estado Vacío (Hueco gris) */
-.secret-hidden {
-    background: rgba(0, 0, 0, 0.4); 
-    border: 3px dashed #666; 
-    width: 90px; height: 90px;
-    display: flex; justify-content: center; align-items: center;
+/* --- ESTILOS DE CARTAS --- */
+.secret-hidden, .secret-revealed {
+    width: 85px; height: 85px;
     border-radius: 10px;
-    box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+    display: flex; justify-content: center; align-items: center;
     transition: all 0.3s ease;
 }
 
-/* 2. Estado Asignado (Dorado y Brillante pero oculto) */
+.secret-hidden {
+    background: rgba(0, 0, 0, 0.6); border: 3px dashed #666;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+}
 .secret-hidden.assigned {
-    border: 3px solid #ffcc00; 
-    background: linear-gradient(135deg, #2a2a2a, #111); 
-    box-shadow: 0 0 15px rgba(255, 204, 0, 0.4); 
+    border: 3px solid #ffcc00;
+    background: linear-gradient(135deg, #2a2a2a, #111);
+    box-shadow: 0 0 15px rgba(255, 204, 0, 0.4);
 }
-
-/* Signo de Interrogación */
-.secret-question {
-    font-size: 40px;
-    color: #555; 
-    font-weight: bold;
-}
-/* Signo Animado cuando está asignado */
-.assigned .secret-question {
-    color: #ffcc00; 
-    text-shadow: 2px 2px 0 #000;
-    animation: float 1.5s infinite ease-in-out; 
-}
-
-/* 3. Estado Revelado (Imagen Visible) */
 .secret-revealed {
-    background: rgba(255, 255, 255, 0.9);
-    border: 4px solid #2ecc71 !important; 
-    width: 90px; height: 90px;
-    border-radius: 10px;
-    box-shadow: 0 0 20px #2ecc71; 
-    display: flex; justify-content: center; align-items: center;
-    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    overflow: hidden;
+    background: rgba(255, 255, 255, 0.9); border: 4px solid #2ecc71 !important;
+    box-shadow: 0 0 20px #2ecc71; overflow: hidden;
 }
-.secret-revealed img { width: 100%; height: 100%; object-fit: contain; }
+.secret-revealed img, .secret-hidden img { width: 100%; height: 100%; object-fit: contain; }
+.secret-question { font-size: 30px; color: #555; font-weight: bold; }
+.assigned .secret-question { color: #ffcc00; text-shadow: 2px 2px 0 #000; animation: float 1.5s infinite ease-in-out; }
 
-/* Animación de flotar */
-@keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-5px); }
-    100% { transform: translateY(0px); }
-}
+@keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-5px); } 100% { transform: translateY(0px); } }
 
-
-/* --- TABLEROS --- */
-.boards-container {
-    display: flex; flex: 1; padding: 10px; gap: 20px; justify-content: center;
-    align-items: flex-start; 
-    padding-bottom: 50px;
-}
-.player-board-wrapper {
-    display: flex; flex-direction: column; align-items: center; width: 48%;
-}
 h3 { 
     font-size: 12px; margin-bottom: 10px; text-align: center; color: #fff; 
-    background: rgba(0,0,0,0.5); padding: 5px; border-radius: 5px;
+    background: rgba(0,0,0,0.5); padding: 5px; border-radius: 5px; width: 100%;
 }
 
-/* REJILLA 5x5 ESTRICTA */
+/* REJILLA 5x5 */
 .grid-5x5 {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr); 
-    gap: 8px;
-    width: 100%; max-width: 600px;
-    aspect-ratio: 1 / 1;
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 6px; width: 100%; max-width: 600px; aspect-ratio: 1 / 1;
 }
 
 /* CARTAS DE JUEGO */
@@ -159,18 +151,14 @@ h3 {
     border: 3px solid #333; border-radius: 5px;
     display: flex; justify-content: center; align-items: center;
     cursor: pointer; position: relative; overflow: hidden;
-    transition: all 0.2s;
-    aspect-ratio: 1 / 1;
+    transition: all 0.2s; aspect-ratio: 1 / 1;
 }
 .poke-card img { width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; }
 
-/* ESTADO ELIMINADO */
+/* ELIMINADO */
 .eliminated {
-    filter: grayscale(100%) contrast(0.8);
-    opacity: 0.6;
-    background: #222;
-    transform: scale(0.95);
-    border-color: #555;
+    filter: grayscale(100%) contrast(0.8); opacity: 0.6;
+    background: #222; transform: scale(0.95); border-color: #555;
 }
 .eliminated::after {
     content: "✖"; color: red; font-size: 40px; font-weight: bold;
@@ -194,5 +182,38 @@ h3 {
 .mod-column:last-child { border-right: none; }
 input { padding: 8px; background: #333; border: 1px solid #555; color: white; }
 .btn-danger { background: #d32f2f; color: white; border-color: #ff8888; }
-
 .btn-reveal { background: #2ecc71; color: white; font-size: 10px; }
+
+/* Ajuste Responsive */
+@media (max-width: 800px) {
+    #top-cameras-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .cam-frame { width: 90%; }
+    
+    .boards-container {
+        flex-direction: column;
+    }
+    .center-targets {
+        flex-direction: row; 
+        margin: 10px 0;
+        gap: 20px;
+    }
+}
+
+/* --- SÚPER OCULTADOR DE SCROLL --- */
+
+/* 1. Para Chrome, Safari y navegadores basados en Webkit */
+*::-webkit-scrollbar {
+    display: none !important; /* El !important fuerza el cambio */
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
+}
+
+/* 2. Para Firefox y otros */
+html, body, div, * {
+    scrollbar-width: none !important; /* Firefox */
+    -ms-overflow-style: none !important; /* IE y Edge antiguo */
+}
