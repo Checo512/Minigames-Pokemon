@@ -1,8 +1,6 @@
 // ==========================================
 // CONFIGURACIÓN DE FIREBASE
 // ==========================================
-
-// Tu configuración (Ya corregí el error aquí)
 const firebaseConfig = {
   apiKey: "AIzaSyAeA9EY43KlROaNSHr8pCmppTB7Z4ryr9E",
   authDomain: "torre-pokemon.firebaseapp.com",
@@ -250,4 +248,5 @@ document.getElementById('poke-search').addEventListener("keypress", (e) => {
             dl.appendChild(op);
         });
     }
+
 })();
