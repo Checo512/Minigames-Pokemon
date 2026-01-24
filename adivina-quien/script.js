@@ -14,7 +14,6 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// Referencias
 const refGame = db.ref('partida/adivina_quien'); 
 const refBoard = refGame.child('tablero');   
 const refTargets = refGame.child('targets'); 
@@ -30,12 +29,21 @@ function iniciarApp(rol) {
     document.getElementById('login-screen').classList.add('hidden');
     document.getElementById('game-board').classList.remove('hidden');
 
+    // Manejo de Cámaras
+    const cam1 = document.getElementById('cam-p1');
+    const cam2 = document.getElementById('cam-p2');
+
     if (rol === 'moderador') {
         document.getElementById('mod-panel').classList.remove('hidden');
-        // Espacio extra para scrollear si el panel tapa la tabla
-        document.body.style.paddingBottom = "250px";
+        document.body.style.paddingBottom = "250px"; // Espacio para scroll
+        // Ocultar cámaras al moderador
+        cam1.classList.add('hidden-cam');
+        cam2.classList.add('hidden-cam');
     } else {
         document.body.style.paddingBottom = "50px";
+        // Mostrar cámaras a jugadores
+        cam1.classList.remove('hidden-cam');
+        cam2.classList.remove('hidden-cam');
     }
 
     const labelP1 = document.getElementById('label-p1');
@@ -51,21 +59,18 @@ function iniciarApp(rol) {
 // ESCUCHAR FIREBASE
 // ==========================================
 function escucharCambios() {
-    // 1. Tablero
     refBoard.on('value', snapshot => {
         const lista = snapshot.val() || {};
         renderizarTablero(lista);
         document.getElementById('counter').innerText = Object.keys(lista).length;
     });
 
-    // 2. Estados de Eliminación
     refStates.on('value', snapshot => {
         const estados = snapshot.val() || { p1: {}, p2: {} };
         aplicarEliminados('board-p1', estados.p1 || {});
         aplicarEliminados('board-p2', estados.p2 || {});
     });
 
-    // 3. Secretos
     refTargets.on('value', snapshot => {
         const targets = snapshot.val() || {};
         renderizarSecreto('target-p1', targets.p1);
@@ -141,25 +146,24 @@ function aplicarEliminados(boardId, listaEliminados) {
     });
 }
 
-// FUNCIÓN DE SECRETO ACTUALIZADA (3 ESTADOS)
 function renderizarSecreto(elementId, data) {
     const el = document.getElementById(elementId);
     
-    // CASO 1: Vacío
+    // CASO 1: HUECO VACÍO
     if (!data) {
         el.className = 'poke-card secret-hidden';
         el.innerHTML = '<span class="secret-question">?</span>';
         return;
     }
 
-    // CASO 2: Asignado pero Oculto
+    // CASO 2: ASIGNADO PERO OCULTO
     if (!data.revealed) {
         el.className = 'poke-card secret-hidden assigned';
         el.innerHTML = '<span class="secret-question">?</span>';
         return;
     }
 
-    // CASO 3: Revelado
+    // CASO 3: REVELADO
     const repoBase = `https://raw.githubusercontent.com/PMDCollab/SpriteCollab/master/portrait/${data.id}/`;
     let imgUrl = data.formId 
         ? `${repoBase}${data.formId}/${data.emotion}.png` 
@@ -223,7 +227,6 @@ function agregarAlTablero() {
     });
 }
 
-// FUNCIÓN CORREGIDA
 function asignarSecreto(jugadorNum) {
     const input = document.getElementById('poke-search-target');
     const nombre = input.value.trim().toLowerCase();
@@ -270,5 +273,4 @@ function reiniciarJuego() {
             dl.appendChild(op);
         });
     }
-
 })();
