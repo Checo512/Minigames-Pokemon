@@ -22,36 +22,46 @@
     <!-- TABLERO DE JUEGO -->
     <div id="game-board" class="hidden">
         
-        <!-- ZONA DE POKEMON SECRETOS (Objetivos) -->
-        <div id="secret-zone">
-            <div class="secret-card-container">
-                <p>OBJETIVO J1</p>
-                <!-- La clase 'secret-hidden' lo mantiene borroso -->
-                <div id="target-p1" class="poke-card secret-hidden">
-                    <span>?</span>
-                </div>
-            </div>
+        <!-- 1. ZONA SUPERIOR: CÁMARAS GRANDES -->
+        <div id="top-cameras-row">
+            <!-- Cámara J1 -->
+            <div id="cam-p1" class="cam-frame">CÁMARA J1</div>
             
-            <div class="vs-logo">VS</div>
-
-            <div class="secret-card-container">
-                <p>OBJETIVO J2</p>
-                <div id="target-p2" class="poke-card secret-hidden">
-                    <span>?</span>
-                </div>
-            </div>
+            <!-- Cámara J2 -->
+            <div id="cam-p2" class="cam-frame">CÁMARA J2</div>
         </div>
 
-        <!-- ZONA DE TABLEROS 5x5 -->
+        <!-- 2. ZONA INFERIOR: TABLERO - OBJETIVOS - TABLERO -->
         <div class="boards-container">
             
-            <!-- Tablero Jugador 1 -->
+            <!-- IZQUIERDA: Tablero Jugador 1 -->
             <div class="player-board-wrapper">
                 <h3 id="label-p1">TABLERO JUGADOR 1</h3>
                 <div id="board-p1" class="grid-5x5"></div>
             </div>
 
-            <!-- Tablero Jugador 2 -->
+            <!-- CENTRO: Objetivos y VS (Columna Vertical) -->
+            <div class="center-targets">
+                <!-- Objetivo J1 -->
+                <div class="secret-card-container">
+                    <p>OBJETIVO J1</p>
+                    <div id="target-p1" class="poke-card secret-hidden">
+                        <span class="secret-question">?</span>
+                    </div>
+                </div>
+                
+                <div class="vs-logo">VS</div>
+
+                <!-- Objetivo J2 -->
+                <div class="secret-card-container">
+                    <p>OBJETIVO J2</p>
+                    <div id="target-p2" class="poke-card secret-hidden">
+                        <span class="secret-question">?</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DERECHA: Tablero Jugador 2 -->
             <div class="player-board-wrapper">
                 <h3 id="label-p2">TABLERO JUGADOR 2</h3>
                 <div id="board-p2" class="grid-5x5"></div>
