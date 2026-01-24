@@ -1,7 +1,6 @@
 // ==========================================
 // CONFIGURACIÓN FIREBASE
 // ==========================================
-// 👇 PEGA TU CONFIG AQUÍ 👇
 const firebaseConfig = {
   apiKey: "AIzaSyAeA9EY43KlROaNSHr8pCmppTB7Z4ryr9E",
   authDomain: "torre-pokemon.firebaseapp.com",
@@ -11,7 +10,6 @@ const firebaseConfig = {
   messagingSenderId: "263837690118",
   appId: "1:263837690118:web:3d3744fd30b5ccd1411687"
 };
-// 👆 ------------------ 👆
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
@@ -272,4 +270,5 @@ function reiniciarJuego() {
             dl.appendChild(op);
         });
     }
+
 })();
