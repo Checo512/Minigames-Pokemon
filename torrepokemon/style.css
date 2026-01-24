@@ -1,0 +1,304 @@
+/* Importar fuente retro */
+* {
+    box-sizing: border-box;
+    font-family: 'Press Start 2P', cursive;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-image: url('fondo.png'); 
+    background-size: cover;
+    background-position: center;
+    background-color: #2a2a2a; 
+    height: 100vh;
+    overflow: hidden; 
+    color: white;
+    text-shadow: 2px 2px 0px #000;
+}
+
+/* Capa oscura y borrosa sobre el fondo */
+body::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.4); 
+    backdrop-filter: blur(3px);      
+    z-index: -1;
+}
+
+/* Efecto de Censura / Título Oculto */
+.blurred {
+    color: transparent !important;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.8) !important;
+    background-color: rgba(0,0,0,0.5);
+    border-color: #888 !important;
+    user-select: none;
+    cursor: help;
+}
+
+/* Pantalla de Login */
+#login-screen {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.9);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+#login-screen button {
+    margin: 20px;
+    padding: 20px;
+    font-size: 20px;
+    cursor: pointer;
+    background: #ffcc00;
+    border: 4px solid #3b4cca;
+    box-shadow: 4px 4px 0px #000;
+    transition: transform 0.2s;
+}
+#login-screen button:hover { transform: scale(1.1); }
+
+.hidden { display: none !important; }
+
+/* --- TABLERO PRINCIPAL --- */
+#main-board {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    padding-top: 20px;
+}
+
+.player-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    position: relative;
+}
+
+h2 {
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 20px;
+    background: rgba(0,0,0,0.6);
+    padding: 15px;
+    border-radius: 10px;
+    border: 3px solid white;
+    box-shadow: 4px 4px 0px black;
+    text-transform: uppercase;
+    color: #ffcc00;
+    width: 90%;
+    transition: all 0.5s ease;
+}
+
+/* Separador Central */
+.separator {
+    width: 12px;
+    background-color: black; 
+    background-image: linear-gradient(to bottom, #ffcc00 70%, transparent 70%);
+    background-size: 12px 60px; 
+    background-repeat: repeat-y;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+    box-shadow: 0 0 10px rgba(0,0,0,0.8);
+}
+
+/* --- CUADRÍCULA RESPONSIVA (Adaptable) --- */
+.grid-container {
+    display: grid;
+    /* POR DEFECTO (Móviles): 3 Columnas */
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    
+    width: 95%;
+    max-width: 100%; /* Deja que crezca en móviles */
+    
+    max-height: 80vh;
+    overflow-y: auto; 
+    padding: 10px;
+    scrollbar-width: none; 
+    margin: 0 auto; 
+}
+
+.grid-container::-webkit-scrollbar { display: none; }
+
+/* REGLAS PARA PANTALLAS GRANDES (PC) */
+@media (min-width: 1024px) {
+    .grid-container {
+        /* En PC usamos 6 columnas */
+        grid-template-columns: repeat(6, 1fr);
+        max-width: 1200px; /* Permitimos que sea mucho más ancha */
+        gap: 15px;
+    }
+}
+
+/* Animación Pop */
+@keyframes popIn {
+    0% { transform: scale(0); opacity: 0; }
+    70% { transform: scale(1.1); } 
+    100% { transform: scale(1); opacity: 1; } 
+}
+
+/* Tarjeta de Pokémon Base */
+.poke-card {
+    background: rgba(255,255,255,0.8);
+    border: 4px solid #333; /* Borde base */
+    border-radius: 8px;
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: 1 / 1; /* Cuadrado perfecto */
+    box-shadow: 4px 4px 0px rgba(0,0,0,0.6);
+    animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.poke-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    image-rendering: pixelated;
+}
+
+/* ESTILOS PARA ESTADOS */
+
+/* 1. Incorrecto (Gris) */
+.grayscale img {
+    filter: grayscale(100%) contrast(1.2);
+    opacity: 0.7;
+}
+
+/* 2. Correcto (Borde Verde) */
+.correct-border {
+    border-color: #2ecc71 !important; /* Verde Esmeralda */
+    box-shadow: 4px 4px 0px #1e8449 !important; /* Sombra verde oscura */
+    background: rgba(255,255,255,0.9);
+}
+
+/* --- PANEL DE MODERADOR --- */
+#mod-panel {
+    position: fixed;
+    bottom: 0;
+    left: 50%; 
+    transform: translateX(-50%); 
+    width: 90%;
+    max-width: 1000px; 
+    background: #1a1a1a;
+    border: 4px solid #ffcc00;
+    border-bottom: none;
+    border-radius: 15px 15px 0 0;
+    padding: 15px;
+    color: white;
+    font-size: 10px; 
+    display: flex;
+    flex-direction: row; 
+    justify-content: space-around;
+    align-items: flex-start;
+    z-index: 500;
+    box-shadow: 0px -5px 20px rgba(0,0,0,0.8);
+}
+
+.mod-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    padding: 0 10px;
+}
+
+.mod-separator {
+    width: 2px;
+    height: 100px;
+    background: #444;
+    margin: 0 10px;
+}
+
+#mod-panel input[type="text"], 
+#mod-panel select {
+    padding: 8px;
+    border: 2px solid #555;
+    background: #333;
+    color: white;
+    border-radius: 4px;
+    width: 100%;
+    font-family: sans-serif;
+    font-weight: bold;
+}
+
+#mod-panel input[type="checkbox"] {
+    transform: scale(1.5);
+    margin-left: 10px;
+}
+
+#mod-panel button {
+    padding: 10px 20px;
+    cursor: pointer;
+    background: #3b4cca;
+    color: white;
+    border: 2px solid white;
+    border-radius: 5px;
+    font-family: sans-serif;
+    font-weight: bold;
+    box-shadow: 2px 2px 0 black;
+    transition: background 0.2s;
+    width: 100%;
+}
+
+#mod-panel button:active { transform: translate(2px, 2px); box-shadow: none; }
+.btn-danger { background-color: #d32f2f !important; border-color: #ff9999 !important; }
+.btn-success { background-color: #388e3c !important; }
+
+/* --- ESTILOS DE LA VENTANA MODAL --- */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-box {
+    background: #222;
+    border: 4px solid white;
+    box-shadow: 0 0 20px #ffcc00;
+    padding: 20px;
+    text-align: center;
+    width: 90%;
+    max-width: 400px;
+    border-radius: 10px;
+    animation: popIn 0.3s ease-out;
+}
+
+.modal-box p {
+    line-height: 1.5;
+    margin: 15px 0;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-correct {
+    background-color: #2ecc71 !important;
+    border-color: #1e8449 !important;
+    flex: 1;
+}
+
+.btn-incorrect {
+    background-color: #7f8c8d !important;
+    border-color: #555 !important;
+    flex: 1;
+}
+
+.btn-correct:hover, .btn-incorrect:hover {
+    transform: scale(1.05);
+}
