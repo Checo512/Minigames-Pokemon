@@ -14,6 +14,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
+// Referencias (Ruta específica para este minijuego)
 const refGame = db.ref('partida/adivina_quien'); 
 const refBoard = refGame.child('tablero');   
 const refTargets = refGame.child('targets'); 
@@ -22,30 +23,33 @@ const refStates = refGame.child('estados');
 let miRol = ''; 
 
 // ==========================================
-// INICIO
+// INICIO Y NAVEGACIÓN
 // ==========================================
 function iniciarApp(rol) {
     miRol = rol;
     document.getElementById('login-screen').classList.add('hidden');
     document.getElementById('game-board').classList.remove('hidden');
 
-    // Manejo de Cámaras
+    // Referencias a los marcos de cámara
     const cam1 = document.getElementById('cam-p1');
     const cam2 = document.getElementById('cam-p2');
 
     if (rol === 'moderador') {
         document.getElementById('mod-panel').classList.remove('hidden');
-        document.body.style.paddingBottom = "250px"; // Espacio para scroll
-        // Ocultar cámaras al moderador
+        // Espacio extra abajo para poder scrollear sin que el panel tape
+        document.body.style.paddingBottom = "250px";
+        
+        // El moderador no necesita ver los huecos de cámara
         cam1.classList.add('hidden-cam');
         cam2.classList.add('hidden-cam');
     } else {
         document.body.style.paddingBottom = "50px";
-        // Mostrar cámaras a jugadores
+        // Los jugadores sí ven los marcos
         cam1.classList.remove('hidden-cam');
         cam2.classList.remove('hidden-cam');
     }
 
+    // Colorear los títulos según quién eres
     const labelP1 = document.getElementById('label-p1');
     const labelP2 = document.getElementById('label-p2');
 
@@ -56,21 +60,25 @@ function iniciarApp(rol) {
 }
 
 // ==========================================
-// ESCUCHAR FIREBASE
+// ESCUCHAR CAMBIOS (FIREBASE)
 // ==========================================
 function escucharCambios() {
+    
+    // 1. Escuchar Tablero (Lista de Pokémon)
     refBoard.on('value', snapshot => {
         const lista = snapshot.val() || {};
         renderizarTablero(lista);
         document.getElementById('counter').innerText = Object.keys(lista).length;
     });
 
+    // 2. Escuchar Eliminados (Quién tachó a quién)
     refStates.on('value', snapshot => {
         const estados = snapshot.val() || { p1: {}, p2: {} };
         aplicarEliminados('board-p1', estados.p1 || {});
         aplicarEliminados('board-p2', estados.p2 || {});
     });
 
+    // 3. Escuchar Secretos (Targets)
     refTargets.on('value', snapshot => {
         const targets = snapshot.val() || {};
         renderizarSecreto('target-p1', targets.p1);
@@ -79,7 +87,7 @@ function escucharCambios() {
 }
 
 // ==========================================
-// RENDERIZADO
+// RENDERIZADO DEL TABLERO
 // ==========================================
 
 function renderizarTablero(listaPokemon) {
@@ -102,14 +110,25 @@ function crearCartaHTML(key, item, duenoTablero) {
     const div = document.createElement('div');
     div.className = 'poke-card';
     div.dataset.id = key; 
+    div.dataset.pokedex = item.id;
+    div.dataset.formid = item.formId || "";
     
+    // Construcción de URL Inicial (Happy) y Respaldo (Normal)
     const repoBase = `https://raw.githubusercontent.com/PMDCollab/SpriteCollab/master/portrait/${item.id}/`;
-    let imgUrl = item.formId 
-        ? `${repoBase}${item.formId}/${item.emotion}.png` 
-        : `${repoBase}${item.emotion}.png`;
+    let imgUrl = "";
+    let backupUrl = "";
 
-    div.innerHTML = `<img src="${imgUrl}" draggable="false">`;
+    if(item.formId) {
+         imgUrl = `${repoBase}${item.formId}/Happy.png`;
+         backupUrl = `${repoBase}${item.formId}/Normal.png`;
+    } else {
+         imgUrl = `${repoBase}Happy.png`;
+         backupUrl = `${repoBase}Normal.png`;
+    }
 
+    div.innerHTML = `<img src="${imgUrl}" draggable="false" alt="${item.name}" onerror="this.src='${backupUrl}'">`;
+
+    // Click para eliminar (solo si es mi tablero)
     div.onclick = () => {
         if (miRol === duenoTablero) {
             toggleEliminacion(duenoTablero, key);
@@ -122,25 +141,41 @@ function crearCartaHTML(key, item, duenoTablero) {
     return div;
 }
 
+// ==========================================
+// LÓGICA DE ELIMINACIÓN Y CAMBIO DE CARAS
+// ==========================================
+
 function aplicarEliminados(boardId, listaEliminados) {
     const contenedor = document.getElementById(boardId);
     const cartas = contenedor.querySelectorAll('.poke-card');
 
     cartas.forEach(carta => {
         const id = carta.dataset.id;
+        const pokedexId = carta.dataset.pokedex;
+        const formId = carta.dataset.formid;
+        const img = carta.querySelector('img');
+
         const estabaEliminado = carta.classList.contains('eliminated');
         const estaEliminadoAhora = !!listaEliminados[id];
 
+        // Construir rutas base para los cambios de expresión
+        const repoBase = `https://raw.githubusercontent.com/PMDCollab/SpriteCollab/master/portrait/${pokedexId}/`;
+        const folder = formId ? `${formId}/` : "";
+
         if (estaEliminadoAhora && !estabaEliminado) {
-            carta.style.animation = 'flipOut 0.2s forwards';
-            setTimeout(() => {
-                carta.classList.add('eliminated');
-                carta.style.animation = 'flipIn 0.2s forwards';
-                reproducirSonido('eliminated');
-            }, 200);
+            // --- ELIMINAR (SAD + TEMBLOR) ---
+            img.src = `${repoBase}${folder}Sad.png`;
+            
+            carta.style.animation = 'eliminationShake 0.4s forwards';
+            carta.classList.add('eliminated');
+            reproducirSonido('eliminated');
+
         } else if (!estaEliminadoAhora && estabaEliminado) {
+            // --- RESTAURAR (HAPPY + REBOTE) ---
+            img.src = `${repoBase}${folder}Happy.png`;
+            
             carta.classList.remove('eliminated');
-            carta.style.animation = 'popIn 0.3s';
+            carta.style.animation = 'popIn 0.3s forwards';
             reproducirSonido('restore');
         }
     });
@@ -149,32 +184,37 @@ function aplicarEliminados(boardId, listaEliminados) {
 function renderizarSecreto(elementId, data) {
     const el = document.getElementById(elementId);
     
-    // CASO 1: HUECO VACÍO
+    // 1. Hueco vacío
     if (!data) {
         el.className = 'poke-card secret-hidden';
         el.innerHTML = '<span class="secret-question">?</span>';
         return;
     }
 
-    // CASO 2: ASIGNADO PERO OCULTO
+    // 2. Asignado pero Oculto
     if (!data.revealed) {
         el.className = 'poke-card secret-hidden assigned';
         el.innerHTML = '<span class="secret-question">?</span>';
         return;
     }
 
-    // CASO 3: REVELADO
+    // 3. Revelado
     const repoBase = `https://raw.githubusercontent.com/PMDCollab/SpriteCollab/master/portrait/${data.id}/`;
     let imgUrl = data.formId 
         ? `${repoBase}${data.formId}/${data.emotion}.png` 
         : `${repoBase}${data.emotion}.png`;
+    
+    // Respaldo Normal por si acaso
+    let backupUrl = data.formId 
+        ? `${repoBase}${data.formId}/Normal.png` 
+        : `${repoBase}Normal.png`;
 
     el.className = 'poke-card secret-revealed';
-    el.innerHTML = `<img src="${imgUrl}">`;
+    el.innerHTML = `<img src="${imgUrl}" onerror="this.src='${backupUrl}'">`;
 }
 
 // ==========================================
-// LÓGICA DE JUEGO
+// INTERACCIÓN CON FIREBASE
 // ==========================================
 
 function toggleEliminacion(jugador, idCarta) {
@@ -183,9 +223,9 @@ function toggleEliminacion(jugador, idCarta) {
 
     refItem.once('value').then(snapshot => {
         if (snapshot.exists()) {
-            refItem.remove(); 
+            refItem.remove(); // Restaurar
         } else {
-            refItem.set(true); 
+            refItem.set(true); // Eliminar
         }
     });
 }
@@ -218,7 +258,7 @@ function agregarAlTablero() {
                 name: encontrado.name,
                 id: encontrado.id,
                 formId: encontrado.formId || null,
-                emotion: 'Normal' 
+                emotion: 'Happy' // <--- Por defecto Happy para que coincida
             });
             input.value = '';
         } else {
@@ -240,7 +280,7 @@ function asignarSecreto(jugadorNum) {
             name: encontrado.name,
             id: encontrado.id,
             formId: encontrado.formId || null,
-            emotion: 'Normal',
+            emotion: 'Happy', // El secreto también estará feliz al revelarse
             revealed: false
         };
         const key = jugadorNum === 1 ? 'p1' : 'p2';
@@ -263,6 +303,7 @@ function reiniciarJuego() {
     }
 }
 
+// Autocompletado
 (function cargarAutocompletado() {
     const dl = document.getElementById('lista-pokemon');
     dl.innerHTML = '';
