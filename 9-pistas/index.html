@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>9 Pistas - Ultimate</title>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- FONDO Y EFECTOS -->
+    <div class="background-layer"></div> <!-- Aquí va fondo.png -->
+    <div class="tech-grid"></div>        <!-- Rejilla tecnológica -->
+    <div class="scanlines"></div>        <!-- Líneas de TV -->
+
+    <!-- LOGIN -->
+    <div id="login-screen">
+        <div class="login-card">
+            <h1 class="game-title">9 PISTAS<br>LEAGUE</h1>
+            <div class="player-grid">
+                <button onclick="iniciarApp('p1')" class="btn-player">JUGADOR 1</button>
+                <button onclick="iniciarApp('p2')" class="btn-player">JUGADOR 2</button>
+                <button onclick="iniciarApp('p3')" class="btn-player">JUGADOR 3</button>
+                <button onclick="iniciarApp('p4')" class="btn-player">JUGADOR 4</button>
+                <button onclick="iniciarApp('p5')" class="btn-player">JUGADOR 5</button>
+                <button onclick="iniciarApp('p6')" class="btn-player">JUGADOR 6</button>
+                <button onclick="iniciarApp('p7')" class="btn-player">JUGADOR 7</button>
+                <button onclick="iniciarApp('p8')" class="btn-player">JUGADOR 8</button>
+            </div>
+            <div class="separator-line"></div>
+            <button onclick="iniciarApp('moderador')" class="btn-mod">PANEL DE CONTROL</button>
+        </div>
+    </div>
+
+    <!-- INTERFAZ DE JUEGO -->
+    <div id="game-interface" class="hidden">
+        
+        <!-- ZONA CÁMARAS (Clases dinámicas para separación) -->
+        <div id="cameras-strip"></div>
+
+        <!-- ZONA DE JUEGO -->
+        <div class="game-floor">
+            
+            <!-- IZQUIERDA: SILUETA -->
+            <div class="silhouette-container">
+                <div class="silhouette-frame">
+                    <div class="corner tl"></div><div class="corner tr"></div>
+                    <div class="corner bl"></div><div class="corner br"></div>
+                    <div id="pokemon-image-container" class="hidden-character">
+                        <div class="pokeball-placeholder"><div class="pokeball-button"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DERECHA: PISTAS -->
+            <div class="clues-container">
+                <div class="clues-header">
+                    <span class="header-icon">📂</span> BASE DE DATOS
+                </div>
+                <div id="clues-list"></div>
+            </div>
+
+        </div>
+
+        <!-- BOTÓN PULSADOR -->
+        <div id="player-controls" class="hidden">
+            <button id="btn-buzzer" onclick="pulsarBoton()">¡RESPONDER!</button>
+            <div id="buzzer-status">ESPERANDO TURNO...</div>
+        </div>
+    </div>
+
+    <!-- PANEL MODERADOR -->
+    <div id="mod-panel" class="hidden">
+        <div class="mod-top-bar">CONTROL DE JUEGO</div>
+        <div class="mod-content">
+            <div class="mod-section">
+                <label>Jugadores:</label>
+                <select id="num-players-select">
+                    <option value="2">2 (VS)</option><option value="3">3 Players</option>
+                    <option value="4" selected>4 Players</option><option value="5">5 Players</option>
+                    <option value="6">6 Players</option><option value="7">7 Players</option><option value="8">8 Players</option>
+                </select>
+                <button onclick="configurarPartida()" class="btn-small">Actualizar Cámaras</button>
+                <button onclick="confirmarReinicio()" class="btn-small btn-alert" style="margin-top:5px">Reset Puntos</button>
+            </div>
+
+            <div class="mod-section grow">
+                <label>Preparar Ronda:</label>
+                <div style="display:flex; gap:5px;">
+                    <input type="text" id="poke-search" list="lista-pokemon" placeholder="Buscar...">
+                    <button onclick="cargarDatosPokemon()">Cargar</button>
+                </div>
+                <div id="clues-inputs" class="input-list"></div>
+                <button onclick="iniciarRonda()" class="btn-go">▶ INICIAR JUEGO</button>
+            </div>
+
+            <div class="mod-section">
+                <label>En Vivo:</label>
+                <button onclick="revelarSiguientePista()" class="btn-live">Siguiente Pista</button>
+                <button onclick="revelarImagen()" class="btn-live btn-reveal">REVELAR TOTAL</button>
+                
+                <div id="mod-buzzer-control" class="hidden buzzer-control-box">
+                    <p style="color:#ffcc00; margin-bottom:5px;">¡JUGADOR <span id="buzzer-player-name">X</span>!</p>
+                    <div class="validation-btns">
+                        <button onclick="validarRespuesta(true)" class="btn-yes">CORRECTO</button>
+                        <button onclick="validarRespuesta(false)" class="btn-no">FALLO</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SISTEMA DE NOTIFICACIONES Y MODALES (NUEVO) -->
+    <div id="custom-toast" class="toast hidden">Mensaje aquí</div>
+    
+    <div id="custom-modal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <h3 id="modal-title">TÍTULO</h3>
+            <p id="modal-msg">Mensaje de confirmación</p>
+            <div class="modal-btns">
+                <button id="modal-btn-yes" class="btn-yes">SÍ</button>
+                <button onclick="cerrarModal()" class="btn-no">CANCELAR</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RECURSOS -->
+    <datalist id="lista-pokemon"></datalist>
+    <audio id="audio-correct" src="correcto.mp3"></audio>
+    <audio id="audio-incorrect" src="incorrecto.mp3"></audio>
+    <audio id="audio-pista" src="pista.mp3"></audio>
+    <audio id="audio-buzzer" src="buzzer.mp3"></audio>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="db.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
