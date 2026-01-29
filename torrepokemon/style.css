@@ -80,6 +80,41 @@ body::before {
     position: relative;
 }
 
+/* --- CAMARAS STREAM --- */
+.camera-box {
+    width: 93%;
+    /* Aspect Ratio 16:9 es el estándar de webcams */
+    aspect-ratio: 16 / 9;
+    background: rgba(0, 0, 0, 0.3); /* Transparente para ver fondo */
+    border: 4px dashed #fff;
+    border-radius: 8px;
+    margin-bottom: 20px; /* Separación con el título */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.5);
+    font-size: 14px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+}
+
+/* Estilo específico Jugador 1 (Azul) */
+#cam-p1 {
+    border-color: #3b4cca;
+    box-shadow: 0 0 10px rgba(59, 76, 202, 0.4);
+}
+
+/* Estilo específico Jugador 2 (Rojo) */
+#cam-p2 {
+    border-color: #ff4444;
+    box-shadow: 0 0 10px rgba(255, 68, 68, 0.4);
+}
+
+/* REGLA: Si el modo moderador está activo, ocultar cámaras */
+body.mode-moderator .camera-box {
+    display: none !important;
+}
+
+/* Títulos */
 h2 {
     text-align: center;
     font-size: 18px;
@@ -131,7 +166,7 @@ h2 {
     .grid-container {
         /* En PC usamos 6 columnas */
         grid-template-columns: repeat(6, 1fr);
-        max-width: 1200px; /* Permitimos que sea mucho más ancha */
+        max-width: 1200px;
         gap: 15px;
     }
 }
@@ -155,6 +190,7 @@ h2 {
     aspect-ratio: 1 / 1; /* Cuadrado perfecto */
     box-shadow: 4px 4px 0px rgba(0,0,0,0.6);
     animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    position: relative; /* Necesario para posicionar el botón de borrar */
 }
 
 .poke-card img {
@@ -276,6 +312,12 @@ h2 {
     animation: popIn 0.3s ease-out;
 }
 
+/* Estilo especial para la caja de borrado */
+.delete-box {
+    border-color: #ff4444 !important;
+    box-shadow: 0 0 20px #ff0000 !important;
+}
+
 .modal-box p {
     line-height: 1.5;
     margin: 15px 0;
@@ -301,4 +343,69 @@ h2 {
 
 .btn-correct:hover, .btn-incorrect:hover {
     transform: scale(1.05);
+}
+
+/* --- ESTILOS DE ELIMINACIÓN (MODERADOR) --- */
+
+/* Botón de borrar (oculto por defecto) */
+.delete-btn {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: #ff4444;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid white;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    display: none; /* Se oculta si no haces hover */
+    align-items: center;
+    justify-content: center;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+    z-index: 10;
+    transition: transform 0.2s;
+}
+
+.delete-btn:hover {
+    transform: scale(1.2) rotate(90deg);
+    background: #ff0000;
+}
+
+/* Mostrar botón al pasar el mouse sobre la carta (Solo si tiene la clase .deletable) */
+.poke-card.deletable:hover {
+    cursor: no-drop; /* Cursor indicando acción destructiva */
+    transform: scale(1.02); /* Pequeño zoom de feedback */
+    border-color: #ff4444 !important;
+}
+
+.poke-card.deletable:hover .delete-btn {
+    display: flex;
+    animation: popIn 0.2s forwards;
+}
+
+/* Animación POOF (Desaparición tipo humo) */
+@keyframes poofOut {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0px);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.2);
+        filter: blur(4px) grayscale(100%);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.1);
+        filter: blur(10px);
+    }
+}
+
+.poof-out {
+    animation: poofOut 0.5s ease-out forwards !important;
+    pointer-events: none; /* Evita clics extra mientras desaparece */
 }
