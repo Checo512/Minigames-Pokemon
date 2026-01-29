@@ -21,6 +21,7 @@ const refTitulos = db.ref('partida/titulos');
 
 let rolActual = 'espectador';
 let envioPendiente = null; 
+let borradoPendiente = null; 
 
 // ==========================================
 // INICIO
@@ -30,10 +31,17 @@ function iniciarApp(rol) {
     document.getElementById('login-screen').classList.add('hidden');
     document.getElementById('main-board').classList.remove('hidden');
 
+    // Gestión visual de cámaras según rol
     if (rol === 'moderador') {
         document.getElementById('mod-panel').classList.remove('hidden');
         document.body.style.paddingBottom = "220px"; 
+        // Agregamos clase para ocultar cámaras en vista moderador
+        document.body.classList.add('mode-moderator');
+    } else {
+        // Asegurar que las cámaras se vean si no es mod
+        document.body.classList.remove('mode-moderator');
     }
+    
     escucharCambios();
 }
 
@@ -64,21 +72,30 @@ function actualizarTitulo(id, data) {
 function renderizarTablaInteligente(elementId, data) {
     const contenedor = document.getElementById(elementId);
 
-    // 1. Limpieza si no hay datos
-    if (!data) {
-        contenedor.innerHTML = '';
-        return;
-    }
-
-    // 2. Eliminar los que ya no existen en la DB
-    const clavesNuevas = Object.keys(data);
+    // 1. Limpieza de elementos que ya no existen en la DB (Con animación POOF)
+    const clavesNuevas = data ? Object.keys(data) : [];
+    
     contenedor.querySelectorAll('.poke-card').forEach(card => {
-        if (!clavesNuevas.includes(card.id.replace('card-', ''))) {
-            card.remove();
+        const cardKey = card.id.replace('card-', '');
+        
+        // Si la carta existe en el HTML pero ya no está en la DB, la borramos
+        if (!clavesNuevas.includes(cardKey)) {
+            // Si ya se está borrando, no hacemos nada
+            if (card.classList.contains('poof-out')) return;
+
+            // Agregamos animación de salida
+            card.classList.add('poof-out');
+            
+            // Esperamos a que termine la animación para remover del DOM
+            setTimeout(() => {
+                card.remove();
+            }, 500); // 500ms coincide con la duración en CSS
         }
     });
 
-    // 3. Agregar o actualizar
+    if (!data) return;
+
+    // 2. Agregar o actualizar
     Object.entries(data).forEach(([key, item]) => {
         const divId = `card-${key}`;
         
@@ -90,21 +107,22 @@ function renderizarTablaInteligente(elementId, data) {
                 const div = document.createElement('div');
                 div.id = divId; 
                 const extraClass = item.status === 'gray' ? 'grayscale' : 'correct-border';
-                div.className = `poke-card ${extraClass}`;
+                
+                // Si es moderador, agregamos clase 'deletable' para efectos CSS
+                const modClass = rolActual === 'moderador' ? 'deletable' : '';
+                
+                div.className = `poke-card ${extraClass} ${modClass}`;
                 
                 // Base URL
                 const repoBase = `https://raw.githubusercontent.com/PMDCollab/SpriteCollab/master/portrait/${item.id}/`;
                 let imageUrl = "";
                 let backupUrl = "";
 
-                // Lógica de Rutas (Shiny / Formas)
                 if (item.isShiny) {
-                    // Shiny siempre necesita carpeta de forma (o 0000) + carpeta 0001
                     const formFolder = item.formId || "0000"; 
                     imageUrl = `${repoBase}${formFolder}/0001/${item.emotion}.png`;
                     backupUrl = `${repoBase}${formFolder}/0001/Normal.png`;
                 } else {
-                    // Normal
                     if (item.formId) {
                         imageUrl = `${repoBase}${item.formId}/${item.emotion}.png`;
                         backupUrl = `${repoBase}${item.formId}/Normal.png`;
@@ -114,42 +132,47 @@ function renderizarTablaInteligente(elementId, data) {
                     }
                 }
 
-                div.innerHTML = `<img src="${imageUrl}" alt="${item.name}" onerror="this.src='${backupUrl}'">`;
-                
+                // Construcción del HTML interno
+                let htmlContent = `<img src="${imageUrl}" alt="${item.name}" onerror="this.src='${backupUrl}'">`;
+
+                // ** SOLO MODERADOR: Botón de borrar **
+                if (rolActual === 'moderador') {
+                    // Determinamos la ruta de Firebase basada en el ID del contenedor (grid-p1 o grid-p2)
+                    const rutaDB = elementId === 'grid-p1' ? 'partida/jugador1' : 'partida/jugador2';
+                    htmlContent += `
+                        <div class="delete-btn" 
+                             onclick="eliminarPokemonIndividual('${rutaDB}', '${key}')" 
+                             title="Borrar este Pokémon">
+                             ✕
+                        </div>
+                    `;
+                }
+
+                div.innerHTML = htmlContent;
                 contenedor.appendChild(div);
                 contenedor.scrollTop = contenedor.scrollHeight;
             };
 
             // --- LÓGICA DE SONIDO Y SINCRONIZACIÓN ---
-            
             const esReciente = (Date.now() - item.timestamp) < 10000;
             let audioParaReproducir = null;
-            let tiempoEspera = 0; // Tiempo por defecto (sin espera)
+            let tiempoEspera = 0;
 
             if (esReciente) {
                 if (item.status === 'gray') {
-                    // INCORRECTO: Sonido Error + Espera CORTA (100ms)
                     audioParaReproducir = document.getElementById('audio-incorrect');
                     tiempoEspera = 0; 
                 } else {
-                    // CORRECTO: Sonido Acierto + Espera LARGA (300ms)
                     audioParaReproducir = document.getElementById('audio-correct');
                     tiempoEspera = 300;
                 }
             }
 
-            // EJECUTAR
             if (audioParaReproducir) {
                 audioParaReproducir.currentTime = 0; 
-                audioParaReproducir.play().catch(e => console.log("Audio pendiente de interacción"));
-                
-                // Retrasamos la aparición visual para que el audio arranque primero
-                setTimeout(() => {
-                    crearTarjetaVisualmente();
-                }, tiempoEspera); 
-
+                audioParaReproducir.play().catch(e => console.log("Audio pendiente"));
+                setTimeout(() => crearTarjetaVisualmente(), tiempoEspera); 
             } else {
-                // Si no hay audio (o no es reciente), mostrar de inmediato
                 crearTarjetaVisualmente();
             }
         }
@@ -157,7 +180,7 @@ function renderizarTablaInteligente(elementId, data) {
 }
 
 // ==========================================
-// MODAL DE CONFIRMACIÓN
+// MODAL DE CONFIRMACIÓN (ENVÍO)
 // ==========================================
 function verificarYPreguntar(jugadorNum) {
     const searchInput = document.getElementById('poke-search').value.toLowerCase().trim();
@@ -210,6 +233,28 @@ function enviarDefinitivo(statusElegido) {
 
 function cerrarModal() {
     document.getElementById('modal-confirm').classList.add('hidden');
+}
+
+// ==========================================
+// GESTIÓN DE BORRADO INDIVIDUAL
+// ==========================================
+function eliminarPokemonIndividual(ruta, key) {
+    borradoPendiente = { ruta: ruta, key: key };
+    document.getElementById('modal-delete').classList.remove('hidden');
+}
+
+function confirmarBorrado() {
+    if (borradoPendiente) {
+        db.ref(borradoPendiente.ruta).child(borradoPendiente.key).remove()
+            .then(() => console.log("Borrado exitoso"))
+            .catch(error => console.error("Error al borrar:", error));
+    }
+    cerrarModalBorrado();
+}
+
+function cerrarModalBorrado() {
+    document.getElementById('modal-delete').classList.add('hidden');
+    borradoPendiente = null;
 }
 
 // ==========================================
