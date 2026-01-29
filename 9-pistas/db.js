@@ -1614,6 +1614,21 @@ const pokemonDB = [
     "id": "0351"
   },
   {
+    "name": "castform (sunny)",
+    "id": "0351",
+    "formId": "0001"
+  },
+  {
+    "name": "castform (rainy)",
+    "id": "0351",
+    "formId": "0002"
+  },
+  {
+    "name": "castform (snowy)",
+    "id": "0351",
+    "formId": "0003"
+  },
+  {
     "name": "kecleon",
     "id": "0352"
   },
@@ -1738,8 +1753,18 @@ const pokemonDB = [
     "id": "0382"
   },
   {
+    "name": "kyogre-primal",
+    "id": "0382",
+    "formId": "0001"
+  },
+  {
     "name": "groudon",
     "id": "0383"
+  },
+  {
+    "name": "groudon-primal",
+    "id": "0383",
+    "formId": "0001"
   },
   {
     "name": "rayquaza",
@@ -1752,6 +1777,21 @@ const pokemonDB = [
   {
     "name": "deoxys-normal",
     "id": "0386"
+  },
+  {
+    "name": "deoxys-attack",
+    "id": "0386",
+    "formId": "0001"
+  },
+  {
+    "name": "deoxys-defense",
+    "id": "0386",
+    "formId": "0002"
+  },
+  {
+    "name": "deoxys-speed",
+    "id": "0386",
+    "formId": "0003"
   },
   {
     "name": "turtwig",
@@ -2167,8 +2207,18 @@ const pokemonDB = [
     "id": "0483"
   },
   {
+    "name": "dialga-origin",
+    "id": "0483",
+    "formId": "0001"
+  },
+  {
     "name": "palkia",
     "id": "0484"
+  },
+  {
+    "name": "palkia-origin",
+    "id": "0484",
+    "formId": "0001"
   },
   {
     "name": "heatran",
@@ -2181,6 +2231,11 @@ const pokemonDB = [
   {
     "name": "giratina-altered",
     "id": "0487"
+  },
+  {
+    "name": "giratina-origin",
+    "id": "0487",
+    "formId": "0001"
   },
   {
     "name": "cresselia",
@@ -2475,9 +2530,19 @@ const pokemonDB = [
     "id": "0555"
   },
   {
-    "name": "darmanitan-standard (galar)",
+    "name": "darmanitan-zen",
     "id": "0555",
     "formId": "0001"
+  },
+  {
+    "name": "darmanitan-standard (galar)",
+    "id": "0555",
+    "formId": "0002"
+  },
+  {
+    "name": "darmanitan-zen (galae)",
+    "id": "0555",
+    "formId": "0003"
   },
   {
     "name": "maractus",
@@ -2849,8 +2914,18 @@ const pokemonDB = [
     "id": "0641"
   },
   {
+    "name": "tornadus-therian",
+    "id": "0641",
+    "formId": "0001"
+  },
+  {
     "name": "thundurus-incarnate",
     "id": "0642"
+  },
+  {
+    "name": "thundurus-therian",
+    "id": "0642",
+    "formId": "0001"
   },
   {
     "name": "reshiram",
@@ -2865,16 +2940,41 @@ const pokemonDB = [
     "id": "0645"
   },
   {
+    "name": "landorus-therian",
+    "id": "0645",
+    "formId": "0001"
+  },
+  {
     "name": "kyurem",
     "id": "0646"
+  },
+  {
+    "name": "kyurem-black",
+    "id": "0646",
+    "formId": "0001"
+  },
+  {
+    "name": "kyurem-white",
+    "id": "0646",
+    "formId": "0002"
   },
   {
     "name": "keldeo-ordinary",
     "id": "0647"
   },
   {
+    "name": "keldeo-resolute",
+    "id": "0647",
+    "formId": "0001"
+  },
+  {
     "name": "meloetta-aria",
     "id": "0648"
+  },
+  {
+    "name": "meloetta-pirouette",
+    "id": "0648",
+    "formId": "0001"
   },
   {
     "name": "genesect",
@@ -2965,6 +3065,11 @@ const pokemonDB = [
     "id": "0670"
   },
   {
+    "name": "floette-eternal",
+    "id": "0670",
+    "formId": "0005"
+  },
+  {
     "name": "florges",
     "id": "0671"
   },
@@ -3007,6 +3112,11 @@ const pokemonDB = [
   {
     "name": "aegislash-shield",
     "id": "0681"
+  },
+  {
+    "name": "aegislash-blade",
+    "id": "0681",
+    "formId": "0001"
   },
   {
     "name": "spritzee",
@@ -3172,12 +3282,32 @@ const pokemonDB = [
     "id": "0718"
   },
   {
+    "name": "zygarde-10",
+    "id": "0718",
+    "formId": "0001"
+  },
+  {
+    "name": "zygarde-complete",
+    "id": "0718",
+    "formId": "0002"
+  },
+  {
+    "name": "zygarde-core",
+    "id": "0718",
+    "formId": "0003"
+  },
+  {
     "name": "diancie",
     "id": "0719"
   },
   {
     "name": "hoopa",
     "id": "0720"
+  },
+  {
+    "name": "hoopa-unbound",
+    "id": "0720",
+    "formId": "0001"
   },
   {
     "name": "volcanion",
@@ -3503,6 +3633,21 @@ const pokemonDB = [
   {
     "name": "necrozma",
     "id": "0800"
+  },
+  {
+    "name": "necrozma (dusk mane)",
+    "id": "0800",
+    "formId": "0001"
+  },
+  {
+    "name": "necrozma (dawn wings)",
+    "id": "0800",
+    "formId": "0002"
+  },
+  {
+    "name": "necrozma-ultra",
+    "id": "0800",
+    "formId": "0003"
   },
   {
     "name": "magearna",
@@ -3857,12 +4002,27 @@ const pokemonDB = [
     "id": "0888"
   },
   {
+    "name": "zacian (crowned sword)",
+    "id": "0888",
+    "formId": "0001"
+  },
+  {
     "name": "zamazenta",
     "id": "0889"
   },
   {
+    "name": "zamazenta (crowned shield)",
+    "id": "0889",
+    "formId": "0001"
+  },
+  {
     "name": "eternatus",
     "id": "0890"
+  },
+  {
+    "name": "zacian (eternamax)",
+    "id": "0890",
+    "formId": "0001"
   },
   {
     "name": "kubfu",
@@ -3871,6 +4031,11 @@ const pokemonDB = [
   {
     "name": "urshifu-single-strike",
     "id": "0892"
+  },
+  {
+    "name": "urshifu-rapid-strike",
+    "id": "0892",
+    "formId": "0001"
   },
   {
     "name": "zarude",
@@ -4373,6 +4538,21 @@ const pokemonDB = [
     "id": "1017"
   },
   {
+    "name": "ogerpon-wellspring",
+    "id": "1017",
+    "formId": "0001"
+  },
+  {
+    "name": "ogerpon-hearthflame",
+    "id": "1017",
+    "formId": "0002"
+  },
+  {
+    "name": "ogerpon-cornerstone",
+    "id": "1017",
+    "formId": "0003"
+  },
+  {
     "name": "archaludon",
     "id": "1018"
   },
@@ -4399,6 +4579,16 @@ const pokemonDB = [
   {
     "name": "terapagos",
     "id": "1024"
+  },
+  {
+    "name": "terapagos-terastal",
+    "id": "1024",
+    "formId": "0001"
+  },
+  {
+    "name": "terapagos-stellar",
+    "id": "1024",
+    "formId": "0002"
   },
   {
     "name": "pecharunt",
