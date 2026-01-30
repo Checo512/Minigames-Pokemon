@@ -12,6 +12,11 @@ const pokemonDB = [
     "id": "0003"
   },
   {
+    "name": "mega venusaur",
+    "id": "0003",
+    "formId": "0001"
+  },
+  {
     "name": "charmander",
     "id": "0004"
   },
@@ -24,6 +29,16 @@ const pokemonDB = [
     "id": "0006"
   },
   {
+    "name": "mega charizard x",
+    "id": "0006",
+    "formId": "0001"
+  },
+  {
+    "name": "mega charizard y",
+    "id": "0006",
+    "formId": "0002"
+  },
+  {
     "name": "squirtle",
     "id": "0007"
   },
@@ -34,6 +49,11 @@ const pokemonDB = [
   {
     "name": "blastoise",
     "id": "0009"
+  },
+  {
+    "name": "mega blastoise",
+    "id": "0009",
+    "formId": "0001"
   },
   {
     "name": "caterpie",
@@ -60,6 +80,11 @@ const pokemonDB = [
     "id": "0015"
   },
   {
+    "name": "mega beedrill",
+    "id": "0015",
+    "formId": "0001"
+  },
+  {
     "name": "pidgey",
     "id": "0016"
   },
@@ -70,6 +95,11 @@ const pokemonDB = [
   {
     "name": "pidgeot",
     "id": "0018"
+  },
+  {
+    "name": "mega pidgeot",
+    "id": "0018",
+    "formId": "0001"
   },
   {
     "name": "rattata",
@@ -112,6 +142,16 @@ const pokemonDB = [
   {
     "name": "raichu",
     "id": "0026"
+  },
+  {
+    "name": "mega raichu x",
+    "id": "0026",
+    "formId": "0002"
+  },
+  {
+    "name": "mega raichu y",
+    "id": "0026",
+    "formId": "0003"
   },
   {
     "name": "raichu (alola)",
@@ -167,6 +207,11 @@ const pokemonDB = [
   {
     "name": "clefable",
     "id": "0036"
+  },
+  {
+    "name": "mega clefable",
+    "id": "0036",
+    "formId": "0001"
   },
   {
     "name": "vulpix",
@@ -330,6 +375,11 @@ const pokemonDB = [
     "id": "0065"
   },
   {
+    "name": "mega alakazam",
+    "id": "0065",
+    "formId": "0001"
+  },
+  {
     "name": "machop",
     "id": "0066"
   },
@@ -352,6 +402,11 @@ const pokemonDB = [
   {
     "name": "victreebel",
     "id": "0071"
+  },
+  {
+    "name": "mega victreebel",
+    "id": "0071",
+    "formId": "0001"
   },
   {
     "name": "tentacool",
@@ -418,6 +473,11 @@ const pokemonDB = [
   {
     "name": "slowbro",
     "id": "0080"
+  },
+  {
+    "name": "mega slowbro",
+    "id": "0080",
+    "formId": "0002"
   },
   {
     "name": "slowbro (galar)",
@@ -494,6 +554,11 @@ const pokemonDB = [
   {
     "name": "gengar",
     "id": "0094"
+  },
+  {
+    "name": "mega gengar",
+    "id": "0094",
+    "formId": "0001"
   },
   {
     "name": "onix",
@@ -605,6 +670,11 @@ const pokemonDB = [
     "id": "0115"
   },
   {
+    "name": "mega kangaskhan",
+    "id": "0115",
+    "formId": "0001"
+  },
+  {
     "name": "horsea",
     "id": "0116"
   },
@@ -627,6 +697,11 @@ const pokemonDB = [
   {
     "name": "starmie",
     "id": "0121"
+  },
+  {
+    "name": "mega starmie",
+    "id": "0121",
+    "formId": "0001"
   },
   {
     "name": "mr-mime",
@@ -658,6 +733,11 @@ const pokemonDB = [
     "id": "0127"
   },
   {
+    "name": "mega pinsir",
+    "id": "0127",
+    "formId": "0001"
+  },
+  {
     "name": "tauros",
     "id": "0128"
   },
@@ -673,6 +753,11 @@ const pokemonDB = [
   {
     "name": "gyarados",
     "id": "0130"
+  },
+  {
+    "name": "mega gyarados",
+    "id": "0130",
+    "formId": "0001"
   },
   {
     "name": "lapras",
@@ -723,6 +808,11 @@ const pokemonDB = [
     "id": "0142"
   },
   {
+    "name": "mega aerodactyl",
+    "id": "0142",
+    "formId": "0001"
+  },
+  {
     "name": "snorlax",
     "id": "0143"
   },
@@ -766,8 +856,23 @@ const pokemonDB = [
     "id": "0149"
   },
   {
+    "name": "mega dragonite",
+    "id": "0149",
+    "formId": "0001"
+  },
+  {
     "name": "mewtwo",
     "id": "0150"
+  },
+  {
+    "name": "mega mewtwo x",
+    "id": "0150",
+    "formId": "0001"
+  },
+  {
+    "name": "mega mewtwo y",
+    "id": "0150",
+    "formId": "0002"
   },
   {
     "name": "mew",
@@ -784,6 +889,11 @@ const pokemonDB = [
   {
     "name": "meganium",
     "id": "0154"
+  },
+  {
+    "name": "mega meganium",
+    "id": "0154",
+    "formId": "0001"
   },
   {
     "name": "cyndaquil",
@@ -813,6 +923,11 @@ const pokemonDB = [
   {
     "name": "feraligatr",
     "id": "0160"
+  },
+  {
+    "name": "mega feraligatr",
+    "id": "0160",
+    "formId": "0002"
   },
   {
     "name": "sentret",
@@ -899,6 +1014,11 @@ const pokemonDB = [
     "id": "0181"
   },
   {
+    "name": "mega ampharos",
+    "id": "0181",
+    "formId": "0001"
+  },
+  {
     "name": "bellossom",
     "id": "0182"
   },
@@ -953,7 +1073,7 @@ const pokemonDB = [
   {
     "name": "wooper (paldea)",
     "id": "0194",
-    "formId": "0001"
+    "formId": "0002"
   },
   {
     "name": "quagsire",
@@ -1017,6 +1137,11 @@ const pokemonDB = [
     "id": "0208"
   },
   {
+    "name": "mega steelix",
+    "id": "0208",
+    "formId": "0001"
+  },
+  {
     "name": "snubbull",
     "id": "0209"
   },
@@ -1038,12 +1163,22 @@ const pokemonDB = [
     "id": "0212"
   },
   {
+    "name": "mega scizor",
+    "id": "0212",
+    "formId": "0001"
+  },
+  {
     "name": "shuckle",
     "id": "0213"
   },
   {
     "name": "heracross",
     "id": "0214"
+  },
+  {
+    "name": "mega heracross",
+    "id": "0214",
+    "formId": "0001"
   },
   {
     "name": "sneasel",
@@ -1108,12 +1243,22 @@ const pokemonDB = [
     "id": "0227"
   },
   {
+    "name": "mega skarmory",
+    "id": "0227",
+    "formId": "0001"
+  },
+  {
     "name": "houndour",
     "id": "0228"
   },
   {
     "name": "houndoom",
     "id": "0229"
+  },
+  {
+    "name": "mega houndoom",
+    "id": "0229",
+    "formId": "0001"
   },
   {
     "name": "kingdra",
@@ -1192,6 +1337,11 @@ const pokemonDB = [
     "id": "0248"
   },
   {
+    "name": "mega tyranitar",
+    "id": "0248",
+    "formId": "0001"
+  },
+  {
     "name": "lugia",
     "id": "0249"
   },
@@ -1216,6 +1366,11 @@ const pokemonDB = [
     "id": "0254"
   },
   {
+    "name": "mega sceptile",
+    "id": "0254",
+    "formId": "0001"
+  },
+  {
     "name": "torchic",
     "id": "0255"
   },
@@ -1228,6 +1383,11 @@ const pokemonDB = [
     "id": "0257"
   },
   {
+    "name": "mega blaziken",
+    "id": "0257",
+    "formId": "0001"
+  },
+  {
     "name": "mudkip",
     "id": "0258"
   },
@@ -1238,6 +1398,11 @@ const pokemonDB = [
   {
     "name": "swampert",
     "id": "0260"
+  },
+  {
+    "name": "mega swampert",
+    "id": "0260",
+    "formId": "0001"
   },
   {
     "name": "poochyena",
@@ -1338,6 +1503,11 @@ const pokemonDB = [
     "id": "0282"
   },
   {
+    "name": "mega gardevoir",
+    "id": "0282",
+    "formId": "0001"
+  },
+  {
     "name": "surskit",
     "id": "0283"
   },
@@ -1418,8 +1588,18 @@ const pokemonDB = [
     "id": "0302"
   },
   {
+    "name": "mega sableye",
+    "id": "0302",
+    "formId": "0001"
+  },
+  {
     "name": "mawile",
     "id": "0303"
+  },
+  {
+    "name": "mega mawile",
+    "id": "0303",
+    "formId": "0001"
   },
   {
     "name": "aron",
@@ -1434,6 +1614,11 @@ const pokemonDB = [
     "id": "0306"
   },
   {
+    "name": "mega aggron",
+    "id": "0306",
+    "formId": "0001"
+  },
+  {
     "name": "meditite",
     "id": "0307"
   },
@@ -1442,12 +1627,22 @@ const pokemonDB = [
     "id": "0308"
   },
   {
+    "name": "mega medicham",
+    "id": "0308",
+    "formId": "0001"
+  },
+  {
     "name": "electrike",
     "id": "0309"
   },
   {
     "name": "manectric",
     "id": "0310"
+  },
+  {
+    "name": "mega manectric",
+    "id": "0310",
+    "formId": "0001"
   },
   {
     "name": "plusle",
@@ -1486,6 +1681,11 @@ const pokemonDB = [
     "id": "0319"
   },
   {
+    "name": "mega sharpedo",
+    "id": "0319",
+    "formId": "0001"
+  },
+  {
     "name": "wailmer",
     "id": "0320"
   },
@@ -1500,6 +1700,11 @@ const pokemonDB = [
   {
     "name": "camerupt",
     "id": "0323"
+  },
+  {
+    "name": "mega camerupt",
+    "id": "0323",
+    "formId": "0001"
   },
   {
     "name": "torkoal",
@@ -1544,6 +1749,11 @@ const pokemonDB = [
   {
     "name": "altaria",
     "id": "0334"
+  },
+  {
+    "name": "mega altaria",
+    "id": "0334",
+    "formId": "0001"
   },
   {
     "name": "zangoose",
@@ -1641,6 +1851,11 @@ const pokemonDB = [
     "id": "0354"
   },
   {
+    "name": "mega banette",
+    "id": "0354",
+    "formId": "0001"
+  },
+  {
     "name": "duskull",
     "id": "0355"
   },
@@ -1657,8 +1872,23 @@ const pokemonDB = [
     "id": "0358"
   },
   {
+    "name": "mega chimecho",
+    "id": "0358",
+    "formId": "0001"
+  },
+  {
     "name": "absol",
     "id": "0359"
+  },
+  {
+    "name": "mega absol",
+    "id": "0359",
+    "formId": "0001"
+  },
+  {
+    "name": "mega absol z",
+    "id": "0359",
+    "formId": "0002"
   },
   {
     "name": "wynaut",
@@ -1671,6 +1901,11 @@ const pokemonDB = [
   {
     "name": "glalie",
     "id": "0362"
+  },
+  {
+    "name": "mega glalie",
+    "id": "0362",
+    "formId": "0001"
   },
   {
     "name": "spheal",
@@ -1717,6 +1952,11 @@ const pokemonDB = [
     "id": "0373"
   },
   {
+    "name": "mega salamence",
+    "id": "0373",
+    "formId": "0001"
+  },
+  {
     "name": "beldum",
     "id": "0374"
   },
@@ -1727,6 +1967,11 @@ const pokemonDB = [
   {
     "name": "metagross",
     "id": "0376"
+  },
+  {
+    "name": "mega metagross",
+    "id": "0376",
+    "formId": "0001"
   },
   {
     "name": "regirock",
@@ -1745,8 +1990,18 @@ const pokemonDB = [
     "id": "0380"
   },
   {
+    "name": "mega latias",
+    "id": "0380",
+    "formId": "0001"
+  },
+  {
     "name": "latios",
     "id": "0381"
+  },
+  {
+    "name": "mega latios",
+    "id": "0381",
+    "formId": "0001"
   },
   {
     "name": "kyogre",
@@ -1769,6 +2024,11 @@ const pokemonDB = [
   {
     "name": "rayquaza",
     "id": "0384"
+  },
+  {
+    "name": "mega rayquaza",
+    "id": "0384",
+    "formId": "0001"
   },
   {
     "name": "jirachi",
@@ -1840,6 +2100,11 @@ const pokemonDB = [
   {
     "name": "staraptor",
     "id": "0398"
+  },
+  {
+    "name": "mega staraptor",
+    "id": "0398",
+    "formId": "0001"
   },
   {
     "name": "bidoof",
@@ -1962,6 +2227,11 @@ const pokemonDB = [
     "id": "0428"
   },
   {
+    "name": "mega lopunny",
+    "id": "0428",
+    "formId": "0001"
+  },
+  {
     "name": "mismagius",
     "id": "0429"
   },
@@ -2030,6 +2300,16 @@ const pokemonDB = [
     "id": "0445"
   },
   {
+    "name": "mega garchomp",
+    "id": "0445",
+    "formId": "0001"
+  },
+  {
+    "name": "mega garchomp z",
+    "id": "0445",
+    "formId": "0001"
+  },
+  {
     "name": "munchlax",
     "id": "0446"
   },
@@ -2040,6 +2320,16 @@ const pokemonDB = [
   {
     "name": "lucario",
     "id": "0448"
+  },
+  {
+    "name": "mega lucario",
+    "id": "0448",
+    "formId": "0001"
+  },
+  {
+    "name": "mega lucario z",
+    "id": "0448",
+    "formId": "0002"
   },
   {
     "name": "hippopotas",
@@ -2088,6 +2378,11 @@ const pokemonDB = [
   {
     "name": "abomasnow",
     "id": "0460"
+  },
+  {
+    "name": "mega abomasnow",
+    "id": "0460",
+    "formId": "0001"
   },
   {
     "name": "weavile",
@@ -2150,6 +2445,11 @@ const pokemonDB = [
     "id": "0475"
   },
   {
+    "name": "mega gallade",
+    "id": "0475",
+    "formId": "0001"
+  },
+  {
     "name": "probopass",
     "id": "0476"
   },
@@ -2160,6 +2460,11 @@ const pokemonDB = [
   {
     "name": "froslass",
     "id": "0478"
+  },
+  {
+    "name": "mega froslass",
+    "id": "0478",
+    "formId": "0001"
   },
   {
     "name": "rotom",
@@ -2225,6 +2530,11 @@ const pokemonDB = [
     "id": "0485"
   },
   {
+    "name": "mega heatran",
+    "id": "0485",
+    "formId": "0001"
+  },
+  {
     "name": "regigigas",
     "id": "0486"
   },
@@ -2252,6 +2562,11 @@ const pokemonDB = [
   {
     "name": "darkrai",
     "id": "0491"
+  },
+  {
+    "name": "mega darkrai",
+    "id": "0491",
+    "formId": "0002"
   },
   {
     "name": "shaymin-land",
@@ -2293,6 +2608,11 @@ const pokemonDB = [
   {
     "name": "emboar",
     "id": "0500"
+  },
+  {
+    "name": "mega emboar",
+    "id": "0500",
+    "formId": "0001"
   },
   {
     "name": "oshawott",
@@ -2420,8 +2740,18 @@ const pokemonDB = [
     "id": "0530"
   },
   {
+    "name": "mega excadrill",
+    "id": "0530",
+    "formId": "0001"
+  },
+  {
     "name": "audino",
     "id": "0531"
+  },
+  {
+    "name": "mega audino",
+    "id": "0531",
+    "formId": "0001"
   },
   {
     "name": "timburr",
@@ -2478,6 +2808,11 @@ const pokemonDB = [
   {
     "name": "scolipede",
     "id": "0545"
+  },
+  {
+    "name": "mega scolipede",
+    "id": "0545",
+    "formId": "0001"
   },
   {
     "name": "cottonee",
@@ -2563,6 +2898,11 @@ const pokemonDB = [
   {
     "name": "scrafty",
     "id": "0560"
+  },
+  {
+    "name": "mega scrafty",
+    "id": "0560",
+    "formId": "0001"
   },
   {
     "name": "sigilyph",
@@ -2756,6 +3096,11 @@ const pokemonDB = [
     "id": "0604"
   },
   {
+    "name": "mega eelektross",
+    "id": "0604",
+    "formId": "0001"
+  },
+  {
     "name": "elgyem",
     "id": "0605"
   },
@@ -2774,6 +3119,11 @@ const pokemonDB = [
   {
     "name": "chandelure",
     "id": "0609"
+  },
+  {
+    "name": "mega chandelure",
+    "id": "0609",
+    "formId": "0001"
   },
   {
     "name": "axew",
@@ -2835,6 +3185,11 @@ const pokemonDB = [
   {
     "name": "golurk",
     "id": "0623"
+  },
+  {
+    "name": "mega golurk",
+    "id": "0623",
+    "formId": "0001"
   },
   {
     "name": "pawniard",
@@ -2993,6 +3348,11 @@ const pokemonDB = [
     "id": "0652"
   },
   {
+    "name": "mega chesnaught",
+    "id": "0652",
+    "formId": "0001"
+  },
+  {
     "name": "fennekin",
     "id": "0653"
   },
@@ -3005,6 +3365,11 @@ const pokemonDB = [
     "id": "0655"
   },
   {
+    "name": "mega delphox",
+    "id": "0655",
+    "formId": "0001"
+  },
+  {
     "name": "froakie",
     "id": "0656"
   },
@@ -3015,6 +3380,16 @@ const pokemonDB = [
   {
     "name": "greninja",
     "id": "0658"
+  },
+  {
+    "name": "greninja-ash",
+    "id": "0658",
+    "formId": "0001"
+  },
+  {
+    "name": "mega greninja",
+    "id": "0658",
+    "formId": "0002"
   },
   {
     "name": "bunnelby",
@@ -3057,6 +3432,10 @@ const pokemonDB = [
     "id": "0668"
   },
   {
+    "name": "mega pyroar",
+    "id": "0668",
+  },
+  {
     "name": "flabebe",
     "id": "0669"
   },
@@ -3068,6 +3447,11 @@ const pokemonDB = [
     "name": "floette-eternal",
     "id": "0670",
     "formId": "0005"
+  },
+  {
+    "name": "mega floette",
+    "id": "0670",
+    "formId": "0006"
   },
   {
     "name": "florges",
@@ -3100,6 +3484,16 @@ const pokemonDB = [
   {
     "name": "meowstic-male",
     "id": "0678"
+  },
+  {
+    "name": "meowstic-female",
+    "id": "0678",
+    "formId": "0002"
+  },
+  {
+    "name": "mega meowstic",
+    "id": "0678",
+    "formId": "0001"
   },
   {
     "name": "honedge",
@@ -3143,6 +3537,11 @@ const pokemonDB = [
     "id": "0687"
   },
   {
+    "name": "mega malamar",
+    "id": "0687",
+    "formId": "0001"
+  },
+  {
     "name": "binacle",
     "id": "0688"
   },
@@ -3151,12 +3550,22 @@ const pokemonDB = [
     "id": "0689"
   },
   {
+    "name": "mega barbaracle",
+    "id": "0689",
+    "formId": "0001"
+  },
+  {
     "name": "skrelp",
     "id": "0690"
   },
   {
     "name": "dragalge",
     "id": "0691"
+  },
+  {
+    "name": "mega dragalge",
+    "id": "0691",
+    "formId": "0001"
   },
   {
     "name": "clauncher",
@@ -3197,6 +3606,11 @@ const pokemonDB = [
   {
     "name": "hawlucha",
     "id": "0701"
+  },
+  {
+    "name": "mega hawlucha",
+    "id": "0701",
+    "formId": "0001"
   },
   {
     "name": "dedenne",
@@ -3297,8 +3711,18 @@ const pokemonDB = [
     "formId": "0003"
   },
   {
+    "name": "mega zygarde",
+    "id": "0718",
+    "formId": "0005"
+  },
+  {
     "name": "diancie",
     "id": "0719"
+  },
+  {
+    "name": "mega diancie",
+    "id": "0719",
+    "formId": "0001"
   },
   {
     "name": "hoopa",
@@ -3395,8 +3819,28 @@ const pokemonDB = [
     "id": "0740"
   },
   {
-    "name": "oricorio-baile",
+    "name": "mega crabominable",
+    "id": "0740",
+    "formId": "0001"
+  },
+  {
+    "name": "oricorio (baile)",
     "id": "0741"
+  },
+  {
+    "name": "oricorio (pom-pom)",
+    "id": "0741",
+    "formId": "0001"
+  },
+  {
+    "name": "oricorio (pa u)",
+    "id": "0741",
+    "formId": "0002"
+  },
+  {
+    "name": "oricorio (sensu)",
+    "id": "0741",
+    "formId": "0003"
   },
   {
     "name": "cutiefly",
@@ -3507,6 +3951,11 @@ const pokemonDB = [
     "id": "0768"
   },
   {
+    "name": "mega golisopod",
+    "id": "0768",
+    "formId": "0001"
+  },
+  {
     "name": "sandygast",
     "id": "0769"
   },
@@ -3553,6 +4002,11 @@ const pokemonDB = [
   {
     "name": "drampa",
     "id": "0780"
+  },
+  {
+    "name": "mega drampa",
+    "id": "0780",
+    "formId": "0001"
   },
   {
     "name": "dhelmise",
@@ -3654,6 +4108,16 @@ const pokemonDB = [
     "id": "0801"
   },
   {
+    "name": "magearna-original",
+    "id": "0801",
+    "formId": "0001"
+  },
+  {
+    "name": "mega magearna",
+    "id": "0801",
+    "formId": "0002"
+  },
+  {
     "name": "marshadow",
     "id": "0802"
   },
@@ -3676,6 +4140,11 @@ const pokemonDB = [
   {
     "name": "zeraora",
     "id": "0807"
+  },
+  {
+    "name": "mega zeraora",
+    "id": "0807",
+    "formId": "0001"
   },
   {
     "name": "meltan",
@@ -3928,6 +4397,11 @@ const pokemonDB = [
   {
     "name": "falinks",
     "id": "0870"
+  },
+  {
+    "name": "mega falinks",
+    "id": "0870",
+    "formId": "0001"
   },
   {
     "name": "pincurchin",
@@ -4278,6 +4752,10 @@ const pokemonDB = [
     "id": "0952"
   },
   {
+    "name": "mega scovillain",
+    "id": "0952",
+  },
+  {
     "name": "rellor",
     "id": "0953"
   },
@@ -4350,6 +4828,11 @@ const pokemonDB = [
     "id": "0970"
   },
   {
+    "name": "mega glimmora",
+    "id": "0970",
+    "formId": "0001"
+  },
+  {
     "name": "greavard",
     "id": "0971"
   },
@@ -4382,6 +4865,10 @@ const pokemonDB = [
     "id": "0978"
   },
   {
+    "name": "mega tatsugiri",
+    "id": "0978",
+  },
+  {
     "name": "annihilape",
     "id": "0979"
   },
@@ -4402,51 +4889,51 @@ const pokemonDB = [
     "id": "0983"
   },
   {
-    "name": "great-tusk",
+    "name": "great-tusk (colmilargo)",
     "id": "0984"
   },
   {
-    "name": "scream-tail",
+    "name": "scream-tail (colagrito)",
     "id": "0985"
   },
   {
-    "name": "brute-bonnet",
+    "name": "brute-bonnet (furioseta)",
     "id": "0986"
   },
   {
-    "name": "flutter-mane",
+    "name": "flutter-mane (melenaleteo)",
     "id": "0987"
   },
   {
-    "name": "slither-wing",
+    "name": "slither-wing (reptalada)",
     "id": "0988"
   },
   {
-    "name": "sandy-shocks",
+    "name": "sandy-shocks (pelarena)",
     "id": "0989"
   },
   {
-    "name": "iron-treads",
+    "name": "iron-treads (ferrodada)",
     "id": "0990"
   },
   {
-    "name": "iron-bundle",
+    "name": "iron-bundle (ferrosaco)",
     "id": "0991"
   },
   {
-    "name": "iron-hands",
+    "name": "iron-hands (ferropalmas)",
     "id": "0992"
   },
   {
-    "name": "iron-jugulis",
+    "name": "iron-jugulis (ferrocuello)",
     "id": "0993"
   },
   {
-    "name": "iron-moth",
+    "name": "iron-moth (ferropolilla)",
     "id": "0994"
   },
   {
-    "name": "iron-thorns",
+    "name": "iron-thorns (ferropuas)",
     "id": "0995"
   },
   {
@@ -4460,6 +4947,11 @@ const pokemonDB = [
   {
     "name": "baxcalibur",
     "id": "0998"
+  },
+  {
+    "name": "mega baxcalibur",
+    "id": "0998",
+    "formId": "0001"
   },
   {
     "name": "gimmighoul",
@@ -4486,11 +4978,11 @@ const pokemonDB = [
     "id": "1004"
   },
   {
-    "name": "roaring-moon",
+    "name": "roaring-moon (bramaluna)",
     "id": "1005"
   },
   {
-    "name": "iron-valiant",
+    "name": "iron-valiant (ferropaladin)",
     "id": "1006"
   },
   {
@@ -4502,11 +4994,11 @@ const pokemonDB = [
     "id": "1008"
   },
   {
-    "name": "walking-wake",
+    "name": "walking-wake (ondulagua)",
     "id": "1009"
   },
   {
-    "name": "iron-leaves",
+    "name": "iron-leaves (ferroverdor)",
     "id": "1010"
   },
   {
@@ -4561,19 +5053,19 @@ const pokemonDB = [
     "id": "1019"
   },
   {
-    "name": "gouging-fire",
+    "name": "gouging-fire (flamariete)",
     "id": "1020"
   },
   {
-    "name": "raging-bolt",
+    "name": "raging-bolt (electrofuria)",
     "id": "1021"
   },
   {
-    "name": "iron-boulder",
+    "name": "iron-boulder (ferromole)",
     "id": "1022"
   },
   {
-    "name": "iron-crown",
+    "name": "iron-crown (ferrotesta)",
     "id": "1023"
   },
   {
