@@ -1,0 +1,175 @@
+* { box-sizing: border-box; font-family: 'Press Start 2P', cursive; }
+
+body {
+    margin: 0; padding: 0;
+    background-color: #2a2a2a; 
+    background-image: url('fondo.png'); 
+    background-size: cover; background-position: center;
+    color: white; height: 100vh; overflow: hidden;
+    display: flex; flex-direction: column;
+}
+
+/* UTILIDADES */
+.hidden { display: none !important; }
+.pointer-events-none { pointer-events: none; }
+
+/* --- CAPA DE EFECTOS --- */
+#fx-layer {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 5000;
+    transition: background 0.2s; pointer-events: none;
+}
+.flash-white { animation: flashAnim 0.2s forwards; }
+@keyframes flashAnim { 0% { background: rgba(255,255,255,0.8); } 100% { background: rgba(255,255,255,0); } }
+.dim-background { background: rgba(0,0,0,0.8); transition: background 1s ease; }
+
+/* --- UI PRINCIPAL (CORRECCIÓN DE CENTRADO) --- */
+#game-ui {
+    display: flex; flex-direction: column; 
+    height: 100vh; width: 100vw; /* Forzar tamaño completo */
+}
+
+.top-bar {
+    padding: 10px; text-align: center; background: rgba(0,0,0,0.6);
+    border-bottom: 2px solid #555; font-size: 10px; height: 50px;
+    flex-shrink: 0; /* Que no se encoja */
+    display: flex; justify-content: center; align-items: center; letter-spacing: 2px;
+}
+
+.battle-arena {
+    flex-grow: 1; /* Ocupa todo el espacio restante */
+    display: flex; 
+    justify-content: center; /* Centrado Horizontal */
+    align-items: center;     /* Centrado Vertical REAL */
+    gap: 40px; padding: 20px; position: relative;
+    transition: transform 0.5s;
+    width: 100%;
+}
+
+/* --- MODO SOLO (Cuando el ganador espera en el centro) --- */
+.battle-arena.solo-mode { gap: 0; }
+.battle-arena.solo-mode .vs-text, .battle-arena.solo-mode #container-challenger { display: none; }
+.battle-arena.solo-mode #container-champion { 
+    transform: scale(1.2); 
+    margin: 0; /* Quitar margenes automáticos para que el flex lo centre */
+}
+
+/* --- CONTENEDORES DE LUCHADORES --- */
+.fighter-container {
+    display: flex; flex-direction: column; align-items: center; gap: 15px;
+    width: 35%; max-width: 300px; 
+    /* Importante: Transition solo para transformaciones suaves manuales */
+    transition: transform 0.3s; 
+}
+
+.label-role { font-size: 10px; color: #aaa; letter-spacing: 2px; text-shadow: 1px 1px 0 #000; margin-bottom: 5px; }
+.vs-text { font-size: 40px; font-style: italic; color: #ff5555; text-shadow: 2px 2px 0 #fff; z-index: 10; animation: pulseVS 1s infinite alternate; }
+@keyframes pulseVS { from { transform: scale(1); } to { transform: scale(1.1); } }
+
+/* --- CARTAS --- */
+.poke-card-battle {
+    width: 100%; aspect-ratio: 1/1;
+    background: rgba(255,255,255,0.9);
+    border: 6px solid #333; border-radius: 15px;
+    display: flex; justify-content: center; align-items: center;
+    cursor: default; position: relative;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    transition: transform 0.2s, border-color 0.2s;
+}
+.poke-card-battle img { width: 90%; height: 90%; object-fit: contain; image-rendering: pixelated; }
+.poke-name { font-size: 14px; text-transform: uppercase; text-shadow: 2px 2px 0 #000; background: rgba(0,0,0,0.5); padding: 5px 10px; border-radius: 5px; margin-top: 5px; }
+
+.my-turn-choose .poke-card-battle { cursor: pointer; border-color: #ffcc00; }
+.my-turn-choose .poke-card-battle:hover { transform: scale(1.05) rotate(2deg); box-shadow: 0 0 30px #ffcc00; }
+
+/* --- NUEVAS ANIMACIONES DE ENTRADA (DINÁMICAS) --- */
+
+/* 1. Campeón se mueve del Centro a la Izquierda */
+.slide-center-to-left { animation: centerToLeft 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+@keyframes centerToLeft {
+    0% { transform: translateX(50%) scale(1.2); } /* Simula estar en el centro */
+    100% { transform: translateX(0) scale(1); }   /* Vuelve a su sitio natural */
+}
+
+/* 2. Retador entra desde la derecha */
+.slide-in-right { animation: inRight 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+@keyframes inRight {
+    0% { transform: translateX(200%); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+}
+
+/* --- ANIMACIONES DE COMBATE --- */
+.screen-shake { animation: shake 0.3s cubic-bezier(.36,.07,.19,.97) both; }
+@keyframes shake { 10%, 90% { transform: translate3d(-4px, 0, 0); } 20%, 80% { transform: translate3d(6px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-8px, 0, 0); } 40%, 60% { transform: translate3d(8px, 0, 0); } }
+
+/* Golpe Normal */
+.anim-attack-right { animation: attackRight 0.4s forwards ease-in; z-index: 100; }
+@keyframes attackRight { 0% { transform: translateX(0); } 40% { transform: translateX(-30px); } 100% { transform: translateX(150%) scale(1.1); } }
+.anim-attack-left { animation: attackLeft 0.4s forwards ease-in; z-index: 100; }
+@keyframes attackLeft { 0% { transform: translateX(0); } 40% { transform: translateX(30px); } 100% { transform: translateX(-150%) scale(1.1); } }
+
+/* Golpe Final (Smash) */
+.anim-smash-right { animation: attackRight 2.5s forwards cubic-bezier(0.1, 0.7, 1.0, 0.1); z-index: 200; }
+.anim-smash-left { animation: attackLeft 2.5s forwards cubic-bezier(0.1, 0.7, 1.0, 0.1); z-index: 200; }
+.final-smash-zoom { transform: scale(1.4); pointer-events: none; }
+
+/* Salir volando */
+.anim-fly-out-right { animation: flyOutRight 0.5s forwards ease-in; }
+@keyframes flyOutRight { to { transform: translate(300%, -200%) rotate(180deg); opacity: 0; } }
+.anim-fly-out-left { animation: flyOutLeft 0.5s forwards ease-in; }
+@keyframes flyOutLeft { to { transform: translate(-300%, -200%) rotate(-180deg); opacity: 0; } }
+
+/* --- MODALES --- */
+.overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85); z-index: 3000;
+    display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px;
+}
+.modal-content {
+    background: #222; border: 4px solid #fff; padding: 30px;
+    border-radius: 10px; text-align: center; max-width: 500px; width: 100%;
+    box-shadow: 0 0 50px rgba(0,0,0,0.5); opacity: 0; transform: translateY(20px);
+}
+.slide-up { animation: slideUp 0.4s forwards ease-out; }
+@keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
+
+.modal-content h2 { color: #ffcc00; margin-bottom: 20px; font-size: 16px; line-height: 1.5; }
+.modal-content input {
+    width: 100%; padding: 15px; font-size: 14px; margin-bottom: 20px;
+    background: #000; color: #fff; border: 2px solid #555; text-align: center; outline: none;
+}
+
+/* Modal Victoria */
+.smash-win {
+    background: #111; border: 6px solid #f1c40f; 
+    box-shadow: 0 0 100px rgba(241, 196, 15, 0.5); animation: zoomInWin 0.5s forwards;
+}
+@keyframes zoomInWin { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+#win-card {
+    width: 200px; height: 200px; margin: 0 auto; 
+    background: #fff; border: 5px solid #fff; border-radius: 10px;
+    display: flex; justify-content: center; align-items: center;
+    transform: rotate(-3deg);
+}
+#win-card img { width: 90%; height: 90%; object-fit: contain; }
+#win-name { font-size: 24px; margin: 20px 0; color: white; letter-spacing: 4px; }
+
+/* Overlay Espera */
+#modal-waiting { background: transparent !important; justify-content: flex-end; padding-bottom: 80px; pointer-events: all; }
+#waiting-msg {
+    background: rgba(0, 0, 0, 0.9); color: #ffcc00; padding: 15px 30px;
+    border-radius: 50px; border: 2px solid #555; font-size: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5); text-transform: uppercase; animation: pulseWait 2s infinite;
+}
+
+/* Botones y Reset */
+#login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+button { padding: 15px 20px; font-size: 12px; cursor: pointer; border: 4px solid white; font-weight: bold; background: #333; color: white; text-transform: uppercase; transition: transform 0.1s; }
+button:hover { transform: scale(1.1); background: #555; box-shadow: 0 0 15px white; }
+#btn-reset-fixed { position: fixed; top: 15px; right: 15px; z-index: 9999; background: rgba(255, 0, 0, 0.2); color: white; border: 1px solid rgba(255,255,255,0.3); font-size: 14px; width: 30px; height: 30px; padding:0; border-radius: 50%; }
+
+/* MEDIA QUERY */
+@media (max-width: 600px) {
+    .battle-arena { flex-direction: column; gap: 30px; }
+    .vs-text { transform: rotate(90deg); margin: 0; }
+    .fighter-container { width: 70%; }
+}

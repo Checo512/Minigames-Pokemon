@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poké-Smash: Café o Té versión Pokémon</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- LAYER DE EFECTOS -->
+    <div id="fx-layer" class="pointer-events-none"></div>
+
+    <!-- PANTALLA DE LOGIN -->
+    <div id="login-screen">
+        <h1 class="game-title animate-pop">POKÉ-SMASH</h1>
+        <p class="subtitle">ADIVINA EL POKEMON (CAFE O TE)</p>
+        <div class="login-buttons">
+            <button onclick="iniciarLogin('jugador1')" class="btn-p1">JUGADOR 1</button>
+            <button onclick="iniciarLogin('jugador2')" class="btn-p2">JUGADOR 2</button>
+        </div>
+    </div>
+
+    <!-- PANTALLA DE JUEGO -->
+    <div id="game-ui" class="hidden">
+        
+        <!-- HEADER -->
+        <div class="top-bar">
+            <div id="status-text">ESPERANDO JUGADORES...</div>
+        </div>
+
+        <!-- ARENA DE BATALLA -->
+        <div class="battle-arena">
+            
+            <!-- CAMPEÓN -->
+            <div class="fighter-container" id="container-champion">
+                <div class="label-role">CAMPEÓN</div>
+                <div id="card-champion" class="poke-card-battle" onclick="seleccionarGanador('champion')"></div>
+                <div id="name-champion" class="poke-name">???</div>
+            </div>
+
+            <div class="vs-text">VS</div>
+
+            <!-- RETADOR -->
+            <div class="fighter-container" id="container-challenger">
+                <div class="label-role">RETADOR</div>
+                <div id="card-challenger" class="poke-card-battle" onclick="seleccionarGanador('challenger')"></div>
+                <div id="name-challenger" class="poke-name">???</div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODALES -->
+
+    <!-- 1. PENSADOR ELIGE SECRETO -->
+    <div id="modal-secret" class="overlay hidden">
+        <div class="modal-content slide-up">
+            <h2>¿EN QUÉ POKÉMON PIENSAS?</h2>
+            <p>El objetivo final.</p>
+            <input type="text" id="input-secret" list="lista-pokemon" placeholder="Escribe aquí...">
+            <button onclick="fijarSecreto()">¡EMPEZAR!</button>
+        </div>
+    </div>
+
+    <!-- 2. ADIVINADOR ELIGE SIGUIENTE -->
+    <div id="modal-next" class="overlay hidden">
+        <div class="modal-content slide-up">
+            <h2 id="winner-announce" style="color:#2ecc71">¡VICTORIA!</h2>
+            <p>¿Quién es el siguiente Pokémon?</p>
+            <input type="text" id="input-next" list="lista-pokemon" placeholder="Nuevo contendiente...">
+            <button onclick="enviarRetador()">A LA BATALLA</button>
+        </div>
+    </div>
+
+    <!-- 3. PANTALLA DE VICTORIA FINAL -->
+    <div id="modal-win" class="overlay hidden">
+        <div class="modal-content smash-win">
+            <h1>¡SE ACABO!</h1>
+            <div id="win-card"></div> 
+            <h2 id="win-name">POKÉMON</h2>
+            <button onclick="siguienteRonda()">REMATCH</button>
+        </div>
+    </div>
+
+    <!-- 4. ESPERA (TRANSPARENTE) -->
+    <div id="modal-waiting" class="overlay hidden">
+        <div id="waiting-msg">ESPERANDO AL RIVAL...</div>
+    </div>
+
+    <!-- BOTÓN RESET -->
+    <button id="btn-reset-fixed" onclick="if(confirm('¿Reiniciar todo?')) resetearPartida()">↻</button>
+
+    <!-- DATALIST -->
+    <datalist id="lista-pokemon"></datalist>
+
+    <!-- SONIDOS -->
+    <audio id="sfx-select" src="select.mp3"></audio> 
+    <audio id="sfx-vs" src="vs_intro.mp3"></audio> 
+    <audio id="sfx-hit" src="hit.mp3"></audio> 
+    <audio id="sfx-smash" src="final_smash.mp3"></audio> 
+    <audio id="sfx-win" src="win.mp3"></audio> 
+    <audio id="sfx-appear" src="appear.mp3"></audio> 
+
+    <!-- DEPENDENCIAS -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="db.js"></script> 
+    <script src="script.js"></script>
+</body>
+</html>
