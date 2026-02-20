@@ -1,0 +1,372 @@
+/* ==========================================
+   VARIABLES Y RESET
+========================================== */
+* { 
+    box-sizing: border-box; 
+    font-family: 'Press Start 2P', cursive; 
+    margin: 0; padding: 0;
+}
+
+:root {
+    --poke-blue: #3B4CCA;
+    --poke-yellow: #FFCC00;
+    --poke-red: #FF0000;
+    --dark-panel: rgba(15, 20, 30, 0.9);
+}
+
+body {
+    background-color: #1a1a2e; 
+    background-image: url('fondo.png'); 
+    background-size: cover; 
+    background-position: center;
+    color: white; 
+    height: 100vh; 
+    overflow: hidden;
+    display: flex; 
+    flex-direction: column;
+}
+
+/* Sombreado radial de fondo para legibilidad sin ocultar el pixel art */
+.bg-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at center, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 100%);
+    z-index: 0;
+}
+
+/* UTILIDADES */
+.hidden { display: none !important; }
+.pointer-events-none { pointer-events: none; }
+
+/* ==========================================
+   CAPA DE EFECTOS (FLASH Y FINAL SMASH)
+========================================== */
+#fx-layer {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 5000;
+    pointer-events: none;
+}
+
+/* Animación de oscurecimiento gradual para crear tensión (Dura 2s hasta el impacto) */
+.dim-background { 
+    animation: buildTension 2s forwards ease-in; 
+}
+@keyframes buildTension {
+    0% { background: rgba(0,0,0,0); }
+    100% { background: rgba(0,0,0,0.95); }
+}
+
+/* Destello de Impacto Épico (SSBU) */
+.dim-background.flash-white {
+    animation: ultimateFlash 1.5s forwards;
+}
+@keyframes ultimateFlash {
+    0% { background: rgba(255, 255, 255, 1); }
+    5% { background: rgba(255, 255, 255, 1); }
+    15% { background: rgba(100, 0, 150, 0.85); } /* Flash púrpura dramático */
+    30% { background: rgba(0, 0, 0, 0.95); }
+    100% { background: rgba(0, 0, 0, 0); }
+}
+
+/* Línea de corte diagonal de Final Smash (Se genera en el momento exacto del impacto) */
+.dim-background.flash-white::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: -50%; width: 200%; height: 8px;
+    background: #fff;
+    box-shadow: 0 0 20px 10px #ff0055, 0 0 50px 20px #9900ff;
+    transform: rotate(-15deg);
+    animation: ultimateCut 0.8s ease-out forwards;
+    z-index: 6000;
+}
+@keyframes ultimateCut {
+    0% { opacity: 0; transform: translateY(-50px) rotate(-15deg) scaleX(0); }
+    5% { opacity: 1; transform: translateY(0) rotate(-15deg) scaleX(1); height: 30px; }
+    15% { opacity: 1; transform: translateY(0) rotate(-15deg) scaleX(1); height: 5px; }
+    100% { opacity: 0; transform: translateY(100px) rotate(-15deg) scaleX(1.5); height: 0; }
+}
+
+/* Flash de impacto normal */
+.flash-white:not(.dim-background) { animation: flashAnim 0.3s forwards ease-out; }
+@keyframes flashAnim { 
+    0% { background: rgba(255,255,255,1); } 
+    100% { background: rgba(255,255,255,0); } 
+}
+
+
+/* ==========================================
+   UI PRINCIPAL (HUD Y BARRA SUPERIOR)
+========================================== */
+#game-ui {
+    display: flex; flex-direction: column; 
+    height: 100vh; width: 100vw; 
+    z-index: 10;
+}
+
+.top-bar {
+    padding: 15px; display: flex; justify-content: center; align-items: center; 
+    flex-shrink: 0; z-index: 20;
+}
+.hud-box {
+    background: var(--dark-panel); border: 4px solid var(--poke-yellow);
+    border-radius: 8px; padding: 15px 25px;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.5), inset 0 0 10px rgba(0,0,0,0.8); text-align: center;
+}
+#status-text { font-size: 12px; letter-spacing: 2px; color: #fff; text-shadow: 2px 2px 0 #000; line-height: 1.5; }
+
+/* ==========================================
+   ARENA DE BATALLA Y CARTAS
+========================================== */
+.battle-arena {
+    flex-grow: 1; display: flex; justify-content: center; align-items: center;
+    gap: 60px; padding: 20px; position: relative;
+    transition: transform 0.5s; width: 100%; z-index: 10;
+}
+.battle-arena.solo-mode { gap: 0; }
+.battle-arena.solo-mode .vs-text, 
+.battle-arena.solo-mode #container-challenger { display: none; }
+.battle-arena.solo-mode #container-champion { transform: scale(1.3); margin: 0; }
+
+.fighter-container {
+    display: flex; flex-direction: column; align-items: center; gap: 15px;
+    width: 35%; max-width: 280px; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+}
+
+.badge-role {
+    font-size: 11px; color: #fff; letter-spacing: 2px; padding: 8px 15px; border-radius: 20px;
+    border: 3px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.5); text-shadow: 1px 1px 0 #000;
+}
+.badge-champ { background: linear-gradient(135deg, #f1c40f, #e67e22); }
+.badge-challenger { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+
+.poke-card-battle {
+    width: 100%; aspect-ratio: 1/1;
+    background: radial-gradient(circle at top left, #ffffff, #d4dce6); border: 6px solid #2c3e50; border-radius: 16px;
+    display: flex; justify-content: center; align-items: center; cursor: default; position: relative;
+    box-shadow: inset 0 0 20px rgba(255,255,255,1), 0 15px 25px rgba(0,0,0,0.5);
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; overflow: hidden;
+}
+.poke-card-battle::before {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: linear-gradient(45deg, transparent 45%, rgba(255,255,255,0.6) 50%, transparent 55%);
+    transform: rotate(45deg); pointer-events: none; opacity: 0; transition: opacity 0.3s;
+}
+.poke-card-battle img { 
+    width: 90%; height: 90%; object-fit: contain; image-rendering: pixelated; 
+    filter: drop-shadow(0px 10px 8px rgba(0,0,0,0.5)); transition: transform 0.3s;
+}
+
+.poke-name-wrapper { background: #111; border: 3px solid #555; border-radius: 8px; padding: 8px 15px; box-shadow: 0 5px 0 #000; }
+.poke-name { font-size: 14px; text-transform: uppercase; color: #fff; text-shadow: 2px 2px 0 #000; }
+
+.my-turn-choose .poke-card-battle { cursor: pointer; border-color: var(--poke-yellow); box-shadow: inset 0 0 20px rgba(255,255,255,1), 0 10px 30px rgba(255,204,0,0.6); }
+.my-turn-choose .poke-card-battle::before { opacity: 1; }
+.my-turn-choose .poke-card-battle:hover { transform: scale(1.08) translateY(-10px); box-shadow: inset 0 0 20px rgba(255,255,255,1), 0 20px 40px rgba(255,204,0,0.8); }
+.my-turn-choose .poke-card-battle:hover img { transform: scale(1.1); }
+
+.vs-text { 
+    font-size: 60px; font-style: italic; font-weight: bold;
+    background: linear-gradient(to bottom, #ffeb3b, #f44336); 
+    -webkit-background-clip: text; 
+    background-clip: text; 
+    color: transparent;
+    -webkit-text-stroke: 3px #fff; 
+    filter: drop-shadow(0 0 15px rgba(255,0,0,0.8));
+    z-index: 10; animation: pulseVS 1.2s infinite alternate ease-in-out; 
+}
+@keyframes pulseVS { from { transform: scale(1) rotate(-5deg); } to { transform: scale(1.15) rotate(0deg); } }
+
+
+/* ==========================================
+   ANIMACIONES DE ENTRADA Y TERREMOTO
+========================================== */
+.slide-center-to-left { animation: centerToLeft 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+@keyframes centerToLeft { 0% { transform: translateX(60%) scale(1.3); } 100% { transform: translateX(0) scale(1); } }
+
+.slide-in-right { animation: inRight 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+@keyframes inRight { 0% { transform: translateX(200%) scale(0.5); opacity: 0; } 100% { transform: translateX(0) scale(1); opacity: 1; } }
+
+/* Terremoto Normal */
+body.screen-shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+@keyframes shake { 
+    10%, 90% { transform: translate3d(-6px, 2px, 0); } 
+    20%, 80% { transform: translate3d(8px, -4px, 0); } 
+    30%, 50%, 70% { transform: translate3d(-10px, 4px, 0); } 
+    40%, 60% { transform: translate3d(10px, -2px, 0); } 
+}
+/* Terremoto Épico para Final Smash */
+body.screen-shake:has(.final-smash-zoom) { animation: extremeShake 0.6s cubic-bezier(.36,.07,.19,.97) both; }
+@keyframes extremeShake { 
+    0%, 100% { transform: translate3d(0, 0, 0); } 
+    10%, 90% { transform: translate3d(-15px, 15px, 0); } 
+    20%, 80% { transform: translate3d(20px, -20px, 0); } 
+    30%, 50%, 70% { transform: translate3d(-25px, 20px, 0); } 
+    40%, 60% { transform: translate3d(25px, -20px, 0); } 
+}
+
+
+/* ==========================================
+   ANIMACIONES DE COMBATE Y FINAL SMASH
+========================================== */
+
+/* Golpe Normal */
+.anim-attack-right { animation: attackRight 0.6s forwards cubic-bezier(0.25, 1, 0.5, 1); z-index: 100; }
+@keyframes attackRight { 
+    0% { transform: translateX(0) scale(1); } 
+    30% { transform: translateX(-40px) scale(0.9) rotate(-10deg); } 
+    60% { transform: translateX(120%) scale(1.2) rotate(15deg); filter: brightness(1.5); } 
+    100% { transform: translateX(150%) scale(1.1) rotate(10deg); } 
+}
+.anim-attack-left { animation: attackLeft 0.6s forwards cubic-bezier(0.25, 1, 0.5, 1); z-index: 100; }
+@keyframes attackLeft { 
+    0% { transform: translateX(0) scale(1); } 
+    30% { transform: translateX(40px) scale(0.9) rotate(10deg); } 
+    60% { transform: translateX(-120%) scale(1.2) rotate(-15deg); filter: brightness(1.5); } 
+    100% { transform: translateX(-150%) scale(1.1) rotate(-10deg); } 
+}
+
+/* FINAL SMASH ZOOM (Acercamiento de Cámara Lento) */
+.final-smash-zoom { 
+    transform: scale(1.6) translateY(5%); pointer-events: none; 
+    transition: transform 2.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+/* ATAQUE FINAL SMASH (El impacto exacto ocurre a los 2.0s = 80%) */
+.anim-smash-right { animation: trueSmashRight 2.5s forwards; z-index: 300; }
+@keyframes trueSmashRight {
+    0% { transform: translateX(0) scale(1); filter: brightness(1); }
+    15% { transform: translateX(-80px) scale(1.1) rotate(-10deg); filter: brightness(0.6) drop-shadow(0 0 10px #ffcc00); }
+    75% { transform: translateX(-100px) scale(1.2) rotate(-15deg); filter: brightness(1.5) drop-shadow(0 0 40px #ff0000); } /* Carga de poder */
+    80% { transform: translateX(100%) scale(1.8) rotate(20deg); filter: brightness(2.5) drop-shadow(0 0 60px #fff); } /* ¡IMPACTO A LOS 2 SEGUNDOS! */
+    85% { transform: translateX(100%) scale(1.8) rotate(20deg); filter: brightness(2.5); } /* Congelamiento por el golpe */
+    100% { transform: translateX(160%) scale(1.4) rotate(15deg); filter: brightness(1); }
+}
+
+.anim-smash-left { animation: trueSmashLeft 2.5s forwards; z-index: 300; }
+@keyframes trueSmashLeft {
+    0% { transform: translateX(0) scale(1); filter: brightness(1); }
+    15% { transform: translateX(80px) scale(1.1) rotate(10deg); filter: brightness(0.6) drop-shadow(0 0 10px #ffcc00); }
+    75% { transform: translateX(100px) scale(1.2) rotate(15deg); filter: brightness(1.5) drop-shadow(0 0 40px #ff0000); }
+    80% { transform: translateX(-100%) scale(1.8) rotate(-20deg); filter: brightness(2.5) drop-shadow(0 0 60px #fff); }
+    85% { transform: translateX(-100%) scale(1.8) rotate(-20deg); filter: brightness(2.5); }
+    100% { transform: translateX(-160%) scale(1.4) rotate(-15deg); filter: brightness(1); }
+}
+
+/* SALIR VOLANDO (Víctima Normal) */
+.anim-fly-out-right { animation: flyOutRight 0.6s forwards cubic-bezier(0.55, 0.085, 0.68, 0.53); }
+@keyframes flyOutRight { to { transform: translate(300%, -200%) rotate(360deg) scale(0.5); opacity: 0; } }
+.anim-fly-out-left { animation: flyOutLeft 0.6s forwards cubic-bezier(0.55, 0.085, 0.68, 0.53); }
+@keyframes flyOutLeft { to { transform: translate(-300%, -200%) rotate(-360deg) scale(0.5); opacity: 0; } }
+
+/* SALIR VOLANDO (Víctima por FINAL SMASH - Extremadamente violento) */
+.final-smash-zoom .anim-fly-out-right { animation: smashFlyOutRight 1.5s forwards cubic-bezier(0.1, 0.9, 0.2, 1); }
+@keyframes smashFlyOutRight {
+    0% { transform: translate(0, 0) scale(1.5) rotate(-20deg); filter: brightness(3) contrast(2); }
+    5% { transform: translate(0, 0) scale(1.5) rotate(-20deg); filter: brightness(3) contrast(2); } /* Congelamiento */
+    100% { transform: translate(800%, -600%) rotate(1440deg) scale(0.1); opacity: 0; filter: brightness(1); }
+}
+.final-smash-zoom .anim-fly-out-left { animation: smashFlyOutLeft 1.5s forwards cubic-bezier(0.1, 0.9, 0.2, 1); }
+@keyframes smashFlyOutLeft {
+    0% { transform: translate(0, 0) scale(1.5) rotate(20deg); filter: brightness(3) contrast(2); }
+    5% { transform: translate(0, 0) scale(1.5) rotate(20deg); filter: brightness(3) contrast(2); }
+    100% { transform: translate(-800%, -600%) rotate(-1440deg) scale(0.1); opacity: 0; filter: brightness(1); }
+}
+
+/* ==========================================
+   MODALES (ESTILO RPG / CONSOLA)
+========================================== */
+.overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85); z-index: 3000;
+    display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px;
+    backdrop-filter: blur(5px);
+}
+.modal-content {
+    background: #f8f8f8; color: #111; border: 6px solid #222; border-radius: 12px;
+    padding: 35px 30px; text-align: center; max-width: 500px; width: 100%;
+    box-shadow: inset 0 0 0 4px #fff, inset 0 0 0 8px #222, 0 15px 40px rgba(0,0,0,0.7);
+    opacity: 0; transform: translateY(30px) scale(0.9);
+}
+.slide-up { animation: slideUp 0.4s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+@keyframes slideUp { to { opacity: 1; transform: translateY(0) scale(1); } }
+
+.modal-content h2 { color: var(--poke-blue); text-shadow: 2px 2px 0px #ccc; margin-bottom: 15px; font-size: 16px; line-height: 1.6; }
+.modal-desc { font-size: 10px; color: #555; margin-bottom: 25px; line-height: 1.4; }
+.victory-text { color: #2ecc71 !important; text-shadow: 2px 2px 0px #1e8449 !important; font-size: 22px !important; animation: bounceWin 1s infinite alternate; }
+@keyframes bounceWin { from{transform:translateY(0)} to{transform:translateY(-5px)} }
+
+.modal-content input {
+    width: 90%; padding: 18px; font-size: 12px; margin-bottom: 30px; background: #fff; color: #000; 
+    border: 4px solid #aaa; border-radius: 6px; box-shadow: inset 0 4px 6px rgba(0,0,0,0.1);
+    text-align: center; outline: none; transition: all 0.3s;
+}
+.modal-content input:focus { border-color: var(--poke-blue); box-shadow: inset 0 4px 6px rgba(0,0,0,0.1), 0 0 15px rgba(59,76,202,0.4); }
+
+.smash-win {
+    background: linear-gradient(135deg, #111, #2a0800); border: 6px solid #f1c40f; 
+    box-shadow: inset 0 0 50px #f1c40f, 0 0 100px rgba(241, 196, 15, 0.8); 
+    animation: zoomInWin 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+@keyframes zoomInWin { 0% { transform: scale(0.3) rotate(-10deg); opacity: 0; } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
+
+.win-banner { font-size: 26px; color: #fff; text-shadow: 3px 3px 0 #d35400, 0 0 20px #f1c40f; margin-bottom: 25px; animation: pulseVS 1s infinite alternate; }
+#win-card { width: 220px; height: 220px; margin: 0 auto; background: radial-gradient(circle, #fff, #f1c40f); border: 6px solid #fff; border-radius: 15px; display: flex; justify-content: center; align-items: center; transform: rotate(-5deg); box-shadow: 0 15px 30px rgba(0,0,0,0.8); }
+#win-card img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 10px 5px rgba(0,0,0,0.5)); animation: floatWin 3s infinite ease-in-out; }
+@keyframes floatWin { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
+#win-name { font-size: 28px; margin: 25px 0; color: #f1c40f; text-shadow: 3px 3px 0 #000; letter-spacing: 4px; }
+
+
+/* ==========================================
+   MODAL DE ESPERA (SIN FONDO BORROSO / TWITCH FRIENDLY)
+========================================== */
+#modal-waiting { 
+    background: transparent !important; 
+    backdrop-filter: none !important;   
+    justify-content: flex-end; 
+    padding-bottom: 60px; 
+    pointer-events: none; 
+}
+#waiting-msg {
+    background: var(--dark-panel); color: var(--poke-yellow); 
+    padding: 18px 35px; border-radius: 50px; border: 3px solid #555; font-size: 14px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.8), 0 0 15px rgba(59,76,202,0.5); 
+    text-transform: uppercase; 
+    animation: floatWaitingBadge 3s infinite ease-in-out;
+}
+@keyframes floatWaitingBadge {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+.dot-anim::after { content: '.'; animation: dots 1.5s steps(4, end) infinite; }
+@keyframes dots { 0%, 20% { content: ''; } 40% { content: '.'; } 60% { content: '..'; } 80%, 100% { content: '...'; } }
+
+
+/* ==========================================
+   BOTONES 3D (ESTILO CONSOLA)
+========================================== */
+#login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,10,20,0.95); z-index: 2000; display: flex; justify-content: center; align-items: center; }
+.login-content { text-align: center; }
+.game-title { font-size: 45px; color: var(--poke-yellow); text-shadow: 4px 4px 0 var(--poke-blue), 8px 8px 0 #0A285F, 0 0 30px rgba(255,204,0,0.5); margin-bottom: 10px; }
+.subtitle { font-size: 12px; color: #fff; letter-spacing: 3px; margin-bottom: 50px; text-shadow: 2px 2px 0 #000; }
+.login-buttons { display: flex; gap: 20px; justify-content: center; }
+
+button { padding: 20px 30px; font-size: 14px; cursor: pointer; font-weight: bold; color: white; text-transform: uppercase; border-radius: 12px; transition: all 0.1s; position: relative; border: 4px solid #fff; text-shadow: 2px 2px 0 rgba(0,0,0,0.5); }
+.btn-p1 { background: linear-gradient(to bottom, #4b9fff, #0055cc); box-shadow: inset -2px -4px 0px rgba(0,0,0,0.2), 0 8px 0px #003388, 0 12px 15px rgba(0,0,0,0.5); }
+.btn-p2 { background: linear-gradient(to bottom, #ff4b4b, #cc0000); box-shadow: inset -2px -4px 0px rgba(0,0,0,0.2), 0 8px 0px #880000, 0 12px 15px rgba(0,0,0,0.5); }
+.btn-action { background: linear-gradient(to bottom, #2ecc71, #27ae60); box-shadow: inset -2px -4px 0px rgba(0,0,0,0.2), 0 8px 0px #1e8449, 0 12px 15px rgba(0,0,0,0.5); color: #fff; border-color: #fff; padding: 15px 25px; width: 90%; }
+.btn-rematch { background: linear-gradient(to bottom, #f1c40f, #f39c12); box-shadow: 0 8px 0px #d35400, 0 12px 15px rgba(0,0,0,0.5); text-shadow: 2px 2px 0 #d35400; }
+
+button:active { transform: translateY(8px); }
+.btn-p1:active { box-shadow: inset -2px -4px 0px rgba(0,0,0,0.2), 0 0px 0px #003388, 0 4px 5px rgba(0,0,0,0.5); }
+.btn-p2:active { box-shadow: inset -2px -4px 0px rgba(0,0,0,0.2), 0 0px 0px #880000, 0 4px 5px rgba(0,0,0,0.5); }
+.btn-action:active { box-shadow: inset -2px -4px 0px rgba(0,0,0,0.2), 0 0px 0px #1e8449, 0 4px 5px rgba(0,0,0,0.5); }
+.btn-rematch:active { box-shadow: 0 0px 0px #d35400, 0 4px 5px rgba(0,0,0,0.5); }
+
+#btn-reset-fixed { position: fixed; top: 15px; right: 15px; z-index: 9999; background: rgba(255, 0, 0, 0.7); color: white; border: 2px solid #fff; font-size: 14px; width: 40px; height: 40px; padding: 0; border-radius: 50%; box-shadow: 0 4px 0 #880000; display: flex; justify-content: center; align-items: center; }
+#btn-reset-fixed:active { transform: translateY(4px); box-shadow: 0 0px 0 #880000; }
+
+@media (max-width: 600px) {
+    .battle-arena { flex-direction: column; gap: 40px; }
+    .vs-text { transform: rotate(0deg); margin: 0; font-size: 40px; }
+    .fighter-container { width: 65%; max-width: none; }
+    .game-title { font-size: 30px; }
+    .login-buttons { flex-direction: column; width: 80%; margin: 0 auto; }
+}
