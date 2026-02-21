@@ -1,0 +1,253 @@
+/* ==========================================
+   VARIABLES Y RESET
+========================================== */
+* { box-sizing: border-box; font-family: 'Press Start 2P', cursive; margin: 0; padding: 0; }
+:root { --poke-blue: #3B4CCA; --poke-yellow: #FFCC00; --poke-red: #FF0000; --dark-panel: rgba(15, 20, 30, 0.9); }
+body { background-color: #1a1a2e; background-image: url('fondo.png'); background-size: cover; background-position: center; color: white; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+.bg-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 100%); z-index: 0; }
+.hidden { display: none !important; }
+.pointer-events-none { pointer-events: none; }
+
+/* ==========================================
+   CAPA DE EFECTOS (FLASH Y FINAL SMASH)
+========================================== */
+#fx-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 5000; pointer-events: none; }
+.dim-background { animation: buildTension 2s forwards ease-in; }
+@keyframes buildTension { 0% { background: rgba(0,0,0,0); } 100% { background: rgba(0,0,0,0.95); } }
+.dim-background.flash-white { animation: ultimateFlash 1.5s forwards; }
+@keyframes ultimateFlash { 0%, 5% { background: rgba(255, 255, 255, 1); } 15% { background: rgba(100, 0, 150, 0.85); } 30% { background: rgba(0, 0, 0, 0.95); } 100% { background: rgba(0, 0, 0, 0); } }
+.dim-background.flash-white::after { content: ''; position: absolute; top: 50%; left: -50%; width: 200%; height: 8px; background: #fff; box-shadow: 0 0 20px 10px #ff0055, 0 0 50px 20px #9900ff; transform: rotate(-15deg); animation: ultimateCut 0.8s ease-out forwards; z-index: 6000; }
+@keyframes ultimateCut { 0% { opacity: 0; transform: translateY(-50px) rotate(-15deg) scaleX(0); } 5% { opacity: 1; transform: translateY(0) rotate(-15deg) scaleX(1); height: 30px; } 15% { opacity: 1; transform: translateY(0) rotate(-15deg) scaleX(1); height: 5px; } 100% { opacity: 0; transform: translateY(100px) rotate(-15deg) scaleX(1.5); height: 0; } }
+.flash-white:not(.dim-background) { animation: flashAnim 0.3s forwards ease-out; }
+@keyframes flashAnim { 0% { background: rgba(255,255,255,1); } 100% { background: rgba(255,255,255,0); } }
+
+/* ==========================================
+   UI PRINCIPAL (HUD Y BARRA SUPERIOR)
+========================================== */
+#game-ui { display: flex; flex-direction: column; height: 100vh; width: 100vw; z-index: 10; padding-bottom: 100px; } 
+.top-bar { padding: 15px; display: flex; justify-content: center; align-items: center; flex-shrink: 0; z-index: 20; }
+.hud-box { background: var(--dark-panel); border: 4px solid var(--poke-yellow); border-radius: 8px; padding: 15px 25px; box-shadow: 0 8px 15px rgba(0,0,0,0.5), inset 0 0 10px rgba(0,0,0,0.8); text-align: center; }
+#status-text { font-size: 12px; letter-spacing: 2px; color: #fff; text-shadow: 2px 2px 0 #000; line-height: 1.5; }
+
+/* ==========================================
+   ARENA DE BATALLA Y CARTAS
+========================================== */
+.battle-arena { flex-grow: 1; display: flex; justify-content: center; align-items: center; gap: 60px; padding: 20px; position: relative; transition: transform 0.5s; width: 100%; z-index: 10; }
+.battle-arena.solo-mode { gap: 0; }
+.battle-arena.solo-mode .vs-text, .battle-arena.solo-mode #container-challenger { display: none; }
+.battle-arena.solo-mode #container-champion { transform: scale(1.3); margin: 0; }
+
+.fighter-container { display: flex; flex-direction: column; align-items: center; gap: 15px; width: 35%; max-width: 280px; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; }
+.badge-role { font-size: 11px; color: #fff; letter-spacing: 2px; padding: 8px 15px; border-radius: 20px; border: 3px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.5); text-shadow: 1px 1px 0 #000; z-index: 2; }
+.badge-champ { background: linear-gradient(135deg, #f1c40f, #e67e22); }
+.badge-challenger { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+
+.poke-card-battle { width: 100%; aspect-ratio: 1/1; background: radial-gradient(circle at top left, #ffffff, #d4dce6); border: 6px solid #2c3e50; border-radius: 16px; display: flex; justify-content: center; align-items: center; cursor: default; position: relative; box-shadow: inset 0 0 20px rgba(255,255,255,1), 0 15px 25px rgba(0,0,0,0.5); transition: all 0.3s; overflow: hidden; z-index: 1; }
+.poke-card-battle::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(45deg, transparent 45%, rgba(255,255,255,0.6) 50%, transparent 55%); transform: rotate(45deg); pointer-events: none; opacity: 0; transition: opacity 0.3s; }
+.poke-card-battle img { width: 90%; height: 90%; object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0px 10px 8px rgba(0,0,0,0.5)); transition: transform 0.3s; }
+
+.poke-name-wrapper { background: #111; border: 3px solid #555; border-radius: 8px; padding: 8px 15px; box-shadow: 0 5px 0 #000; z-index: 2;}
+.poke-name { font-size: 14px; text-transform: uppercase; color: #fff; text-shadow: 2px 2px 0 #000; }
+
+.my-turn-choose .poke-card-battle { cursor: pointer; border-color: var(--poke-yellow); box-shadow: inset 0 0 20px rgba(255,255,255,1), 0 10px 30px rgba(255,204,0,0.6); }
+.my-turn-choose .poke-card-battle::before { opacity: 1; }
+.my-turn-choose .poke-card-battle:hover { transform: scale(1.08) translateY(-10px); box-shadow: inset 0 0 20px rgba(255,255,255,1), 0 20px 40px rgba(255,204,0,0.8); }
+.my-turn-choose .poke-card-battle:hover img { transform: scale(1.1); }
+
+.vs-text { font-size: 60px; font-style: italic; font-weight: bold; background: linear-gradient(to bottom, #ffeb3b, #f44336); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-stroke: 3px #fff; filter: drop-shadow(0 0 15px rgba(255,0,0,0.8)); z-index: 10; animation: pulseVS 1.2s infinite alternate ease-in-out; }
+@keyframes pulseVS { from { transform: scale(1) rotate(-5deg); } to { transform: scale(1.15) rotate(0deg); } }
+
+/* ==========================================
+   WIN STREAK (RACHAS DE VICTORIA - REAL FLAME)
+========================================== */
+#streak-badge {
+    position: absolute; top: -25px; right: -15px; /* Esquina superior derecha */
+    font-size: 32px; font-style: italic; font-weight: 900;
+    color: #fff;
+    -webkit-text-stroke: 2px #d35400;
+    text-shadow: 4px 4px 0 #000, 0 0 20px #f1c40f;
+    transform: rotate(10deg);
+    z-index: 20; 
+    animation: popCombo 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    pointer-events: none;
+}
+@keyframes popCombo { 
+    from { transform: scale(0) rotate(0deg); opacity: 0; } 
+    to { transform: scale(1) rotate(10deg); opacity: 1; } 
+}
+
+/* Animación de llamas realista: mueve la sombra hacia arriba simulando calor */
+@keyframes burn {
+    0% { box-shadow: 0 -10px 20px 5px var(--fire-color), 0 0 10px var(--fire-color); }
+    50% { box-shadow: 0 -25px 30px 10px var(--fire-color), 0 -5px 15px var(--fire-color); transform: translateY(1px); }
+    100% { box-shadow: 0 -15px 25px 8px var(--fire-color), 0 0 10px var(--fire-color); }
+}
+
+/* Fases de Fuego: Colores y velocidad de la llama */
+/* NIVEL 4: Chispa inicial (Naranja) */
+.fire-level-4 { 
+    --fire-color: rgba(243, 156, 18, 0.6);
+    border-color: #f39c12 !important; 
+    animation: burn 1.2s infinite ease-in-out alternate; 
+}
+/* NIVEL 5: Fuego estable (Naranja fuerte) */
+.fire-level-5 { 
+    --fire-color: rgba(230, 126, 34, 0.7);
+    border-color: #e67e22 !important; 
+    animation: burn 1s infinite ease-in-out alternate; 
+}
+/* NIVEL 6: Ardiendo (Rojo naranja) */
+.fire-level-6 { 
+    --fire-color: rgba(211, 84, 0, 0.8);
+    border-color: #d35400 !important; 
+    animation: burn 0.8s infinite ease-in-out alternate; 
+}
+/* NIVEL 7: Fuego intenso (Rojo) */
+.fire-level-7 { 
+    --fire-color: rgba(231, 76, 60, 0.9);
+    border-color: #e74c3c !important; 
+    animation: burn 0.6s infinite ease-in-out alternate; 
+}
+/* NIVEL 8: Infierno (Rojo oscuro) */
+.fire-level-8 { 
+    --fire-color: rgba(192, 57, 43, 0.95);
+    border-color: #c0392b !important; 
+    animation: burn 0.4s infinite ease-in-out alternate; 
+}
+/* NIVEL 9: Llamas violentas (Rojo puro) */
+.fire-level-9 { 
+    --fire-color: rgba(255, 0, 0, 1);
+    border-color: #ff0000 !important; 
+    animation: burn 0.2s infinite ease-in-out alternate; 
+}
+/* NIVEL 10: Fuego Blanco/Azul (Potencia Máxima) */
+.fire-level-10 { 
+    --fire-color: rgba(255, 255, 255, 0.9);
+    border-color: #fff !important; 
+    animation: burn 0.1s infinite ease-in-out alternate; 
+    filter: brightness(1.2) contrast(1.2);
+}
+
+
+/* ==========================================
+   ANIMACIONES DE COMBATE Y ENTRADA
+========================================== */
+.slide-center-to-left { animation: centerToLeft 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+@keyframes centerToLeft { 0% { transform: translateX(60%) scale(1.3); } 100% { transform: translateX(0) scale(1); } }
+.slide-in-right { animation: inRight 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+@keyframes inRight { 0% { transform: translateX(200%) scale(0.5); opacity: 0; } 100% { transform: translateX(0) scale(1); opacity: 1; } }
+
+body.screen-shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+@keyframes shake { 10%, 90% { transform: translate3d(-6px, 2px, 0); } 20%, 80% { transform: translate3d(8px, -4px, 0); } 30%, 50%, 70% { transform: translate3d(-10px, 4px, 0); } 40%, 60% { transform: translate3d(10px, -2px, 0); } }
+body.screen-shake:has(.final-smash-zoom) { animation: extremeShake 0.6s cubic-bezier(.36,.07,.19,.97) both; }
+@keyframes extremeShake { 0%, 100% { transform: translate3d(0, 0, 0); } 10%, 90% { transform: translate3d(-15px, 15px, 0); } 20%, 80% { transform: translate3d(20px, -20px, 0); } 30%, 50%, 70% { transform: translate3d(-25px, 20px, 0); } 40%, 60% { transform: translate3d(25px, -20px, 0); } }
+
+.anim-attack-right { animation: attackRight 0.6s forwards cubic-bezier(0.25, 1, 0.5, 1); z-index: 100; }
+@keyframes attackRight { 0% { transform: translateX(0) scale(1); } 30% { transform: translateX(-40px) scale(0.9) rotate(-10deg); } 60% { transform: translateX(120%) scale(1.2) rotate(15deg); filter: brightness(1.5); } 100% { transform: translateX(150%) scale(1.1) rotate(10deg); } }
+.anim-attack-left { animation: attackLeft 0.6s forwards cubic-bezier(0.25, 1, 0.5, 1); z-index: 100; }
+@keyframes attackLeft { 0% { transform: translateX(0) scale(1); } 30% { transform: translateX(40px) scale(0.9) rotate(10deg); } 60% { transform: translateX(-120%) scale(1.2) rotate(-15deg); filter: brightness(1.5); } 100% { transform: translateX(-150%) scale(1.1) rotate(-10deg); } }
+
+.final-smash-zoom { transform: scale(1.6) translateY(5%); pointer-events: none; transition: transform 2.5s cubic-bezier(0.25, 0.1, 0.25, 1); }
+.anim-smash-right { animation: trueSmashRight 2.5s forwards; z-index: 300; }
+@keyframes trueSmashRight { 0% { transform: translateX(0) scale(1); filter: brightness(1); } 15% { transform: translateX(-80px) scale(1.1) rotate(-10deg); filter: brightness(0.6) drop-shadow(0 0 10px #ffcc00); } 75% { transform: translateX(-100px) scale(1.2) rotate(-15deg); filter: brightness(1.5) drop-shadow(0 0 40px #ff0000); } 80% { transform: translateX(100%) scale(1.8) rotate(20deg); filter: brightness(2.5) drop-shadow(0 0 60px #fff); } 85% { transform: translateX(100%) scale(1.8) rotate(20deg); filter: brightness(2.5); } 100% { transform: translateX(160%) scale(1.4) rotate(15deg); filter: brightness(1); } }
+.anim-smash-left { animation: trueSmashLeft 2.5s forwards; z-index: 300; }
+@keyframes trueSmashLeft { 0% { transform: translateX(0) scale(1); filter: brightness(1); } 15% { transform: translateX(80px) scale(1.1) rotate(10deg); filter: brightness(0.6) drop-shadow(0 0 10px #ffcc00); } 75% { transform: translateX(100px) scale(1.2) rotate(15deg); filter: brightness(1.5) drop-shadow(0 0 40px #ff0000); } 80% { transform: translateX(-100%) scale(1.8) rotate(-20deg); filter: brightness(2.5) drop-shadow(0 0 60px #fff); } 85% { transform: translateX(-100%) scale(1.8) rotate(-20deg); filter: brightness(2.5); } 100% { transform: translateX(-160%) scale(1.4) rotate(-15deg); filter: brightness(1); } }
+
+.anim-fly-out-right { animation: flyOutRight 0.6s forwards cubic-bezier(0.55, 0.085, 0.68, 0.53); }
+@keyframes flyOutRight { to { transform: translate(300%, -200%) rotate(360deg) scale(0.5); opacity: 0; } }
+.anim-fly-out-left { animation: flyOutLeft 0.6s forwards cubic-bezier(0.55, 0.085, 0.68, 0.53); }
+@keyframes flyOutLeft { to { transform: translate(-300%, -200%) rotate(-360deg) scale(0.5); opacity: 0; } }
+.final-smash-zoom .anim-fly-out-right { animation: smashFlyOutRight 1.5s forwards cubic-bezier(0.1, 0.9, 0.2, 1); }
+@keyframes smashFlyOutRight { 0%, 5% { transform: translate(0, 0) scale(1.5) rotate(-20deg); filter: brightness(3) contrast(2); } 100% { transform: translate(800%, -600%) rotate(1440deg) scale(0.1); opacity: 0; filter: brightness(1); } }
+.final-smash-zoom .anim-fly-out-left { animation: smashFlyOutLeft 1.5s forwards cubic-bezier(0.1, 0.9, 0.2, 1); }
+@keyframes smashFlyOutLeft { 0%, 5% { transform: translate(0, 0) scale(1.5) rotate(20deg); filter: brightness(3) contrast(2); } 100% { transform: translate(-800%, -600%) rotate(-1440deg) scale(0.1); opacity: 0; filter: brightness(1); } }
+
+
+/* ==========================================
+   CONSOLA RPG INFERIOR (TELEPROMPTER)
+========================================== */
+#rpg-console {
+    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+    background: var(--dark-panel); border: 4px solid var(--poke-blue); border-radius: 50px;
+    padding: 15px 35px; box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 0 20px rgba(59,76,202,0.6);
+    text-align: center; color: #fff; z-index: 4000;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    width: auto; min-width: 300px;
+}
+#rpg-console.expanded {
+    bottom: 40px; border-radius: 12px; padding: 25px 30px;
+    width: 90%; max-width: 500px; pointer-events: auto;
+    border-color: var(--poke-yellow); box-shadow: 0 15px 40px rgba(0,0,0,0.9), inset 0 0 20px rgba(255,204,0,0.4);
+}
+
+#console-waiting { font-size: 12px; color: var(--poke-yellow); letter-spacing: 2px; }
+.dot-anim::after { content: '.'; animation: dots 1.5s steps(4, end) infinite; }
+@keyframes dots { 0%, 20% { content: ''; } 40% { content: '.'; } 60% { content: '..'; } 80%, 100% { content: '...'; } }
+#console-prompt { color: var(--poke-yellow); font-size: 11px; margin-bottom: 15px; text-shadow: 1px 1px 0 #000; line-height: 1.5;}
+
+.input-wrapper { position: relative; width: 100%; margin-bottom: 15px; }
+#rpg-input {
+    width: 100%; padding: 15px; font-size: 12px;
+    background: #111; color: #fff; border: 3px solid #555; border-radius: 6px;
+    text-align: center; outline: none; transition: border-color 0.2s;
+}
+#rpg-input:focus { border-color: var(--poke-blue); }
+
+.rejection-shake { animation: rejectShake 0.4s both; border-color: #e74c3c !important; background-color: #4a0000 !important; }
+@keyframes rejectShake { 0%, 100%{transform:translateX(0)} 20%, 60%{transform:translateX(-10px)} 40%, 80%{transform:translateX(10px)} }
+
+#custom-autocomplete {
+    position: absolute; bottom: 100%; left: 0; width: 100%; margin-bottom: 5px;
+    background: #222; border: 3px solid #555; border-radius: 6px;
+    max-height: 160px; overflow-y: auto; list-style: none; padding: 0; z-index: 4500;
+    box-shadow: 0 -10px 20px rgba(0,0,0,0.8);
+}
+#custom-autocomplete::-webkit-scrollbar { width: 8px; }
+#custom-autocomplete::-webkit-scrollbar-thumb { background: var(--poke-blue); border-radius: 4px; }
+#custom-autocomplete li {
+    padding: 12px; font-size: 10px; cursor: pointer; text-align: left;
+    border-bottom: 1px solid #333; color: #fff; text-transform: uppercase;
+    transition: background 0.1s;
+}
+#custom-autocomplete li:hover { background: #3b4cca; }
+#custom-autocomplete li.used-poke {
+    color: #888; text-decoration: line-through; cursor: not-allowed;
+    background: #1a0000; display: flex; justify-content: space-between;
+}
+#custom-autocomplete li.used-poke::after { content: '💀'; font-style: normal; }
+#custom-autocomplete li.used-poke:hover { background: #330000; }
+
+
+/* ==========================================
+   MODAL DE VICTORIA Y BOTONES GENERALES
+========================================== */
+.overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 5000; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(5px); }
+.modal-content { background: #f8f8f8; color: #111; border: 6px solid #222; border-radius: 12px; padding: 35px 30px; text-align: center; max-width: 500px; width: 100%; box-shadow: inset 0 0 0 4px #fff, inset 0 0 0 8px #222, 0 15px 40px rgba(0,0,0,0.7); }
+.smash-win { background: linear-gradient(135deg, #111, #2a0800); border: 6px solid #f1c40f; box-shadow: inset 0 0 50px #f1c40f, 0 0 100px rgba(241, 196, 15, 0.8); animation: zoomInWin 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+@keyframes zoomInWin { 0% { transform: scale(0.3) rotate(-10deg); opacity: 0; } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
+.win-banner { font-size: 26px; color: #fff; text-shadow: 3px 3px 0 #d35400, 0 0 20px #f1c40f; margin-bottom: 25px; animation: pulseVS 1s infinite alternate; }
+#win-card { width: 220px; height: 220px; margin: 0 auto; background: radial-gradient(circle, #fff, #f1c40f); border: 6px solid #fff; border-radius: 15px; display: flex; justify-content: center; align-items: center; transform: rotate(-5deg); box-shadow: 0 15px 30px rgba(0,0,0,0.8); }
+#win-card img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 10px 5px rgba(0,0,0,0.5)); animation: floatWin 3s infinite ease-in-out; }
+@keyframes floatWin { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
+#win-name { font-size: 28px; margin: 25px 0; color: #f1c40f; text-shadow: 3px 3px 0 #000; letter-spacing: 4px; }
+
+#login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,10,20,0.95); z-index: 6000; display: flex; justify-content: center; align-items: center; }
+.login-content { text-align: center; }
+.game-title { font-size: 45px; color: var(--poke-yellow); text-shadow: 4px 4px 0 var(--poke-blue), 8px 8px 0 #0A285F, 0 0 30px rgba(255,204,0,0.5); margin-bottom: 10px; }
+.subtitle { font-size: 12px; color: #fff; letter-spacing: 3px; margin-bottom: 50px; text-shadow: 2px 2px 0 #000; }
+.login-buttons { display: flex; gap: 20px; justify-content: center; }
+button { padding: 20px 30px; font-size: 14px; cursor: pointer; font-weight: bold; color: white; text-transform: uppercase; border-radius: 12px; transition: all 0.1s; position: relative; border: 4px solid #fff; text-shadow: 2px 2px 0 rgba(0,0,0,0.5); }
+.btn-p1 { background: linear-gradient(to bottom, #4b9fff, #0055cc); box-shadow: inset -2px -4px 0px rgba(0,0,0,0.2), 0 8px 0px #003388, 0 12px 15px rgba(0,0,0,0.5); }
+.btn-p2 { background: linear-gradient(to bottom, #ff4b4b, #cc0000); box-shadow: inset -2px -4px 0px rgba(0,0,0,0.2), 0 8px 0px #880000, 0 12px 15px rgba(0,0,0,0.5); }
+.btn-action { background: linear-gradient(to bottom, #2ecc71, #27ae60); box-shadow: inset -2px -4px 0px rgba(0,0,0,0.2), 0 8px 0px #1e8449, 0 12px 15px rgba(0,0,0,0.5); color: #fff; border-color: #fff; padding: 15px 25px; width: 100%; font-size: 12px;}
+.btn-rematch { background: linear-gradient(to bottom, #f1c40f, #f39c12); box-shadow: 0 8px 0px #d35400, 0 12px 15px rgba(0,0,0,0.5); text-shadow: 2px 2px 0 #d35400; width: 80%;}
+button:active { transform: translateY(8px); }
+.btn-p1:active { box-shadow: inset -2px -4px 0px rgba(0,0,0,0.2), 0 0px 0px #003388, 0 4px 5px rgba(0,0,0,0.5); }
+.btn-p2:active { box-shadow: inset -2px -4px 0px rgba(0,0,0,0.2), 0 0px 0px #880000, 0 4px 5px rgba(0,0,0,0.5); }
+.btn-action:active { box-shadow: inset -2px -4px 0px rgba(0,0,0,0.2), 0 0px 0px #1e8449, 0 4px 5px rgba(0,0,0,0.5); }
+.btn-rematch:active { box-shadow: 0 0px 0px #d35400, 0 4px 5px rgba(0,0,0,0.5); }
+
+#btn-reset-fixed { position: fixed; top: 15px; right: 15px; z-index: 9999; background: rgba(255, 0, 0, 0.7); color: white; border: 2px solid #fff; font-size: 14px; width: 40px; height: 40px; padding: 0; border-radius: 50%; box-shadow: 0 4px 0 #880000; display: flex; justify-content: center; align-items: center; }
+#btn-reset-fixed:active { transform: translateY(4px); box-shadow: 0 0px 0 #880000; }
+
+@media (max-width: 600px) { .battle-arena { flex-direction: column; gap: 40px; } .vs-text { transform: rotate(0deg); margin: 0; font-size: 40px; } .fighter-container { width: 65%; max-width: none; } .game-title { font-size: 30px; } .login-buttons { flex-direction: column; width: 80%; margin: 0 auto; } #rpg-console.expanded { width: 95%; padding: 20px 15px; } }
