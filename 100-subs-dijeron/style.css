@@ -1,0 +1,238 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,900;1,900&display=swap');
+
+:root {
+    --gold: #FFD700;
+    --gold-dark: #b8860b;
+    --blue-dark: #050b14;
+    --blue-panel: #0a1b38;
+    --blue-neon: #00f3ff;
+    --magenta-neon: #ff00ea;
+    --red-strike: #ff1100;
+    --glass-bg: rgba(255, 255, 255, 0.05);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
+body { overflow: hidden; background-color: #000; color: white; }
+
+/* UTILIDADES */
+.pantalla { display: none; width: 100vw; height: 100vh; position: relative; }
+.pantalla.activa { display: flex; }
+.glass-panel { background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; }
+.glow-text { text-shadow: 0 0 15px currentColor; }
+.oculto { opacity: 0; pointer-events: none; }
+
+/* BOTONES (Efecto físico de switch/teclado) */
+.btn-pro { 
+    padding: 12px 20px; font-weight: 900; text-transform: uppercase; 
+    border: none; border-radius: 6px; cursor: pointer; transition: 0.1s;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+.physical-btn {
+    box-shadow: 0 6px 0px rgba(0,0,0,0.6), 0 10px 15px rgba(0,0,0,0.4);
+    transform: translateY(0);
+}
+.physical-btn:active {
+    box-shadow: 0 2px 0px rgba(0,0,0,0.8), 0 5px 5px rgba(0,0,0,0.4);
+    transform: translateY(4px);
+}
+.btn-gold { background: linear-gradient(180deg, #ffe55c, var(--gold)); color: #000; }
+.btn-blue { background: linear-gradient(180deg, #4df6ff, var(--blue-neon)); color: #000; }
+.btn-red { background: linear-gradient(180deg, #ff6b8b, #ff416c); color: #fff; }
+.btn-green { background: linear-gradient(180deg, #6bf59e, #38ef7d); color: #000; }
+.btn-strike { background: #111; border: 2px solid var(--red-strike); color: var(--red-strike); }
+.btn-strike:hover { background: var(--red-strike); color: #fff; box-shadow: 0 0 20px var(--red-strike); }
+
+/* =========================================
+   PANTALLA DE SELECCIÓN
+========================================= */
+#pantalla-seleccion {
+    flex-direction: column; justify-content: center; align-items: center;
+    background: radial-gradient(circle at center, #0a224a 0%, #020a17 100%);
+    text-align: center; z-index: 1000;
+}
+.logo-gigante {
+    font-size: 4rem; font-weight: 900; color: var(--gold); line-height: 1; margin-bottom: 50px;
+    text-shadow: 0 5px 15px rgba(0,0,0,0.8), 0 0 30px rgba(255, 215, 0, 0.3);
+    animation: slideDown 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+.logo-gigante span { font-size: 7rem; color: #fff; display: block; text-shadow: 0 10px 20px rgba(0,0,0,0.9); }
+.botones-rol { display: flex; gap: 30px; animation: flyInUp 0.8s ease-out 0.2s both; }
+.botones-rol .btn-pro { padding: 20px 40px; font-size: 1.3rem; border-radius: 12px; }
+
+/* =========================================
+   PANTALLA ADMIN (MESA DE CONTROL)
+========================================= */
+.presentador-bg { background-color: #07090f; padding: 20px; flex-direction: column; overflow-y: auto; }
+.console-panel { background: #121621; border-top: 2px solid #2a354d; border-left: 2px solid #2a354d; box-shadow: 10px 10px 20px rgba(0,0,0,0.5); }
+.admin-topbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; margin-bottom: 20px; }
+.admin-main { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.admin-seccion { padding: 20px; }
+.span-full { grid-column: 1 / -1; }
+.input-pro { width: 100%; padding: 12px; font-size: 1.1rem; background: #000; color: var(--blue-neon); border: 2px solid #222; border-radius: 5px; outline: none; }
+.strike-controls { display: flex; justify-content: space-between; gap: 20px; }
+.mini-label { color: #888; font-size: 0.8rem; margin-bottom: 10px; letter-spacing: 1px; text-transform: uppercase; }
+.admin-grid-respuestas { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.admin-fila-respuesta { display: flex; justify-content: space-between; align-items: center; background: #000; padding: 15px; border-left: 4px solid var(--blue-neon); border-radius: 6px; }
+.texto-resp { font-size: 1.2rem; font-weight: bold; }
+
+/* =========================================
+   PANTALLA STREAM (TV STUDIO)
+========================================= */
+.tv-bg { 
+    background: radial-gradient(circle at 50% 40%, #0d2754 0%, var(--blue-dark) 100%); 
+    box-shadow: inset 0 0 150px rgba(0,0,0,0.9); /* Efecto Viñeta */
+}
+
+/* Patrón LED de fondo */
+.tv-bg::before {
+    content: ''; position: absolute; top:0; left:0; width: 100%; height: 100%;
+    background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 8px 8px; pointer-events: none; z-index: 0;
+}
+
+/* Focos moviéndose en el fondo */
+.studio-lights { position: absolute; width: 100%; height: 100%; overflow: hidden; z-index: 0; opacity: 0.3; mix-blend-mode: screen; }
+.light { position: absolute; bottom: -20%; width: 200px; height: 150%; background: linear-gradient(to top, rgba(0, 210, 255, 0.8), transparent); filter: blur(40px); transform-origin: bottom center; }
+.light-1 { left: 15%; animation: sweep 8s infinite alternate ease-in-out; }
+.light-2 { right: 15%; background: linear-gradient(to top, rgba(255, 0, 234, 0.6), transparent); animation: sweep 10s infinite alternate-reverse ease-in-out; }
+
+.tv-layout {
+    display: flex; flex-direction: column; justify-content: space-between;
+    height: 100vh; width: 100vw; padding: 20px 40px; box-sizing: border-box; z-index: 10; position: relative;
+}
+
+/* TOP: MARCADORES DIGITALES */
+.tv-top { display: flex; justify-content: space-between; align-items: flex-start; height: 12%; }
+.espacio-vacio { width: 250px; } 
+.score-panel {
+    background: linear-gradient(180deg, #111 0%, #000 100%);
+    border: 3px solid #333; border-top-color: #555; border-left-color: #555;
+    box-shadow: inset 0 5px 15px rgba(0,0,0,0.9), 0 10px 20px rgba(0,0,0,0.6);
+    border-radius: 8px; padding: 10px 30px;
+}
+.center-score { min-width: 350px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.etiqueta-puntos { font-size: 0.9rem; color: #888; letter-spacing: 4px; font-weight: bold; margin-bottom: 5px; }
+.numero-puntos { font-size: 4.5rem; color: var(--gold); font-weight: 900; line-height: 1; text-shadow: 0 5px 5px rgba(0,0,0,0.8), 0 0 20px rgba(255,215,0,0.4); }
+
+.tv-strikes { display: flex; flex-direction: column; align-items: center; border-color: #400; box-shadow: inset 0 5px 15px rgba(0,0,0,0.9), 0 0 20px rgba(255,0,0,0.2); }
+.strike-boxes { display: flex; gap: 12px; margin-top: 5px; }
+.s-box { 
+    width: 45px; height: 45px; background: #0a0a0a; border: 2px solid #222; border-radius: 4px; 
+    box-shadow: inset 0 0 10px #000; display: flex; justify-content: center; align-items: center; 
+    font-size: 2.2rem; transition: 0.3s; color: transparent; 
+}
+.s-box.activo { 
+    border-color: var(--red-strike); background: rgba(50,0,0,0.8); color: var(--red-strike); 
+    box-shadow: inset 0 0 15px var(--red-strike), 0 0 10px var(--red-strike); 
+}
+.s-box.activo::after { content: '❌'; text-shadow: 0 0 10px var(--red-strike); animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+/* MIDDLE: PREGUNTA Y CARTAS ESTILO LED */
+.tv-middle { display: flex; flex-direction: column; align-items: center; flex-grow: 1; justify-content: center; margin-top: -20px; }
+.contenedor-pregunta { 
+    padding: 15px 50px; margin-bottom: 40px; 
+    background: linear-gradient(90deg, transparent, rgba(0, 150, 255, 0.3), transparent); 
+    border-top: 2px solid var(--blue-neon); border-bottom: 2px solid var(--blue-neon);
+    max-width: 90%; 
+}
+.tv-pregunta { font-size: 2.4rem; text-align: center; text-transform: uppercase; text-shadow: 0 4px 10px #000; animation: slideDown 0.6s ease-out; }
+
+.tablero { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; width: 100%; max-width: 1100px; perspective: 1500px; }
+
+.carta { height: 85px; perspective: 1200px; cursor: default; opacity: 0; animation: turnOnScreen 0.5s ease-out forwards; }
+.carta { animation-delay: calc(0.1s * var(--i)); } 
+
+/* Rebote mecánico más pronunciado */
+.carta-inner { width: 100%; height: 100%; position: relative; transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1); transform-style: preserve-3d; }
+.carta.revelada .carta-inner { transform: rotateX(180deg); }
+
+.carta-front, .carta-back { width: 100%; height: 100%; position: absolute; backface-visibility: hidden; display: flex; align-items: center; border-radius: 8px; box-shadow: 0 10px 20px rgba(0,0,0,0.7); overflow: hidden; }
+
+/* Frente: Pantalla apagada / Modo reposo */
+.carta-front { 
+    background: linear-gradient(180deg, #053b66, #161e54); 
+    border: 3px solid #20558a; border-top-color: #3f7cb5; justify-content: center;
+}
+.carta-front::before { content:''; position: absolute; inset:0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px); }
+.numero-oculto { 
+    font-size: 3rem; font-weight: 900; color: rgba(255,255,255,0.8); background: radial-gradient(circle, rgba(0,0,0,0.5), transparent);
+    width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); z-index: 2;
+}
+
+/* Dorso: Pantalla encendida Studio TV */
+.carta-back { 
+    background: linear-gradient(180deg, #061124 0%, #0a2046 100%); 
+    transform: rotateX(180deg); 
+    border: 3px solid var(--blue-neon); border-bottom-color: #0056b3;
+    justify-content: space-between; padding: 0 8px 0 25px; 
+    box-shadow: inset 0 0 30px rgba(0,243,255,0.15), 0 10px 20px rgba(0,0,0,0.8);
+}
+.respuesta-texto { font-size: 2rem; font-weight: 900; text-transform: uppercase; color: #fff; text-shadow: 0 3px 5px #000; line-height: 1.1; z-index: 2; }
+.votos-texto { font-size: 0.9rem; color: var(--blue-neon); font-weight: bold; margin-top: 4px; text-shadow: 0 0 5px var(--blue-neon); }
+.respuesta-puntos { 
+    font-size: 3rem; font-weight: 900; background: linear-gradient(180deg, #111, #000); 
+    color: var(--gold); height: 70px; min-width: 90px; display: flex; justify-content: center; align-items: center; 
+    border-radius: 6px; border: 2px solid var(--gold); border-top-color: #fffde0; 
+    box-shadow: inset 0 5px 10px #000, 0 0 15px rgba(255,215,0,0.3); z-index: 2; text-shadow: 0 2px 5px #000;
+}
+
+/* Efecto de destello al girar (Glint) */
+.carta-back::after {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.4), transparent);
+    transform: rotate(45deg) translateX(-100%); opacity: 0; pointer-events: none; z-index: 5;
+}
+.carta.revelada .carta-back::after { animation: glint 0.7s ease-out 0.4s forwards; }
+
+/* BOTTOM: CÁMARAS OBS (Estilo Monitor Transmisión) */
+.tv-bottom { display: flex; justify-content: space-between; align-items: flex-end; width: 100%; height: 260px; }
+.cam-container { 
+    width: 440px; height: 247px; background: #000; border-radius: 8px; position: relative; 
+    border: 6px solid #1a1a1a; border-top-color: #333; border-left-color: #333;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.5); overflow: hidden;
+}
+/* Efectos de pantalla interna */
+.scanlines { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.2) 2px, rgba(0,0,0,0.2) 4px); pointer-events: none; z-index: 5; }
+.live-badge { 
+    position: absolute; top: 12px; right: 15px; background: #ff0000; color: #fff; 
+    font-size: 0.8rem; font-weight: bold; padding: 4px 10px; border-radius: 4px; z-index: 6; 
+    box-shadow: 0 0 10px red; animation: blinkLive 1.5s infinite; letter-spacing: 1px;
+}
+.cam-inner { position: absolute; top:0; left:0; width: 100%; height: 100%; pointer-events: none; z-index: 4; border: 2px solid transparent; }
+.cam-presentador .cam-inner { box-shadow: inset 0 0 40px rgba(0, 243, 255, 0.3); }
+.cam-concursante .cam-inner { box-shadow: inset 0 0 40px rgba(255, 0, 234, 0.3); }
+
+/* Letreros 3D Lower-third */
+.cam-label { 
+    position: absolute; bottom: -2px; left: 50%; transform: translateX(-50%); 
+    background: linear-gradient(180deg, #222, #000); padding: 8px 30px; border-radius: 6px 6px 0 0; 
+    font-weight: 900; font-size: 1.1rem; z-index: 6; 
+    border: 2px solid #555; border-bottom: none; box-shadow: 0 -5px 15px rgba(0,0,0,0.8);
+    white-space: nowrap; text-shadow: 0 2px 4px #000;
+}
+.label-host { color: var(--blue-neon); }
+.label-player { color: var(--magenta-neon); }
+
+/* OVERLAY STRIKE PANTALLA COMPLETA */
+.overlay-bloqueo { position: absolute; top:0; left:0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.9); z-index: 999; display: flex; justify-content: center; align-items: center; }
+#strike-overlay { position: absolute; top:0; left:0; width: 100vw; height: 100vh; background: rgba(255, 0, 0, 0); z-index: 900; display: flex; justify-content: center; align-items: center; transition: background 0.2s; }
+.pantalla-shake #strike-overlay { animation: strobeLight 0.3s infinite; }
+.strike-equis { 
+    font-size: 22rem; font-family: sans-serif; color: #ff0000; font-weight: 900; 
+    text-shadow: 0 0 40px #ff0000, 0 0 100px #ff0000, 0 0 200px #ff0000, 0 10px 0px #500; 
+    animation: strikeIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards, neonFlicker 0.1s infinite alternate; 
+}
+
+/* KEYFRAMES */
+@keyframes flyInUp { 0% { transform: translateY(40px) scale(0.9); opacity: 0; } 100% { transform: translateY(0) scale(1); opacity: 1; } }
+@keyframes slideDown { 0% { transform: translateY(-30px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+@keyframes popIn { 0% { transform: scale(0); } 80% { transform: scale(1.3); } 100% { transform: scale(1); } }
+@keyframes strikeIn { 0% { transform: scale(3) translateZ(500px); opacity: 0; } 100% { transform: scale(1) translateZ(0); opacity: 1; } }
+@keyframes glint { 0% { transform: rotate(45deg) translateX(-150%); opacity: 1; } 100% { transform: rotate(45deg) translateX(150%); opacity: 1; } }
+@keyframes turnOnScreen { 0% { transform: scaleY(0.01) scaleX(0); opacity: 0; } 50% { transform: scaleY(0.01) scaleX(1); opacity: 1; } 100% { transform: scaleY(1) scaleX(1); opacity: 1; } }
+@keyframes blinkLive { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+@keyframes sweep { 0% { transform: rotate(-15deg); } 100% { transform: rotate(15deg); } }
+@keyframes strobeLight { 0%, 100% { background: rgba(255, 0, 0, 0); } 50% { background: rgba(255, 0, 0, 0.4); } }
+@keyframes neonFlicker { 0% { opacity: 0.8; } 100% { opacity: 1; } }
+.pantalla-shake { animation: shake 0.3s ease-in-out; }
+@keyframes shake { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(-20px, 15px); } 50% { transform: translate(20px, -15px); } 75% { transform: translate(-15px, 20px); } }

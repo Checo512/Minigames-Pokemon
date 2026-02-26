@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>100 Suscriptores Dijeron - PRO TV STUDIO</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- PANTALLA 1: SELECCIÓN -->
+    <div id="pantalla-seleccion" class="pantalla activa glass-bg">
+        <div class="logo-gigante">100 SUSCRIPTORES<br><span>DIJERON</span></div>
+        <div class="botones-rol">
+            <button id="btn-soy-presentador" class="btn-pro btn-gold">🎙️ Panel de Control</button>
+            <button id="btn-soy-concursante" class="btn-pro btn-blue">📺 Soy Concursante</button>
+        </div>
+    </div>
+
+    <!-- PANTALLA 2: PRESENTADOR (Mesa de Control de Producción) -->
+    <div id="pantalla-presentador" class="pantalla presentador-bg">
+        <div class="admin-topbar glass-panel console-panel">
+            <div class="admin-branding">🔴 LIVE BROADCAST CONTROL</div>
+            <div class="admin-marcador">PUNTOS: <span id="admin-puntos" class="glow-text">0</span></div>
+            <button id="admin-reset-puntos" class="btn-pro btn-red small physical-btn">🔄 Resetear Puntos</button>
+        </div>
+
+        <div class="admin-main">
+            <!-- Selector -->
+            <div class="admin-seccion glass-panel console-panel">
+                <h3>📋 SELECCIONAR PREGUNTA</h3>
+                <select id="admin-selector-pregunta" class="input-pro"></select>
+            </div>
+
+            <!-- Strikes y Errores -->
+            <div class="admin-seccion glass-panel console-panel">
+                <h3>❌ CONTROL DE STRIKES</h3>
+                <div class="strike-controls">
+                    <div>
+                        <p class="mini-label">Overlay Pantalla Completa:</p>
+                        <button class="btn-pro btn-strike anim-btn physical-btn" data-strikes="1">1 ❌</button>
+                        <button class="btn-pro btn-strike anim-btn physical-btn" data-strikes="2">2 ❌</button>
+                        <button class="btn-pro btn-strike anim-btn physical-btn" data-strikes="3">3 ❌</button>
+                    </div>
+                    <div class="contador-admin">
+                        <p class="mini-label">Contador Fijo:</p>
+                        <button id="btn-sumar-error" class="btn-pro btn-blue small physical-btn">+1 Error Fijo</button>
+                        <button id="btn-reset-errores" class="btn-pro btn-red small physical-btn">Limpiar Errores</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Respuestas -->
+            <div class="admin-seccion glass-panel span-full console-panel">
+                <h3 id="admin-texto-pregunta" class="pregunta-titulo">Cargando...</h3>
+                <div id="admin-lista-respuestas" class="admin-grid-respuestas"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANTALLA 3: STREAM / CONCURSANTE -->
+    <div id="pantalla-concursante" class="pantalla tv-bg">
+        <div class="studio-lights">
+            <div class="light light-1"></div>
+            <div class="light light-2"></div>
+        </div>
+
+        <div id="overlay-audio" class="overlay-bloqueo">
+            <button id="btn-activar-audio" class="btn-pro btn-gold gigant pulse-anim physical-btn">Haz clic para Iniciar el Show 🎵</button>
+        </div>
+
+        <!-- Animación de Strike Gigante -->
+        <div id="strike-overlay" class="oculto">
+            <div id="strike-container" class="strike-equis"></div>
+        </div>
+
+        <!-- LAYOUT ESTRICTO PARA EVITAR SOLAPAMIENTOS -->
+        <div class="tv-layout">
+            
+            <!-- TOP: Marcadores -->
+            <div class="tv-top">
+                <div class="tv-strikes score-panel">
+                    <span class="etiqueta-puntos">ERRORES</span>
+                    <div id="tv-strike-boxes" class="strike-boxes">
+                        <div class="s-box" id="sbox-1"></div>
+                        <div class="s-box" id="sbox-2"></div>
+                        <div class="s-box" id="sbox-3"></div>
+                    </div>
+                </div>
+
+                <div class="marcador-global score-panel center-score">
+                    <span class="etiqueta-puntos">PUNTUACIÓN GLOBAL</span>
+                    <span id="tv-puntos-totales" class="numero-puntos glow-text">0</span>
+                </div>
+                
+                <div class="espacio-vacio"></div>
+            </div>
+
+            <!-- MIDDLE: Pregunta y Tablero -->
+            <div class="tv-middle">
+                <div class="contenedor-pregunta">
+                    <h2 id="tv-texto-pregunta" class="tv-pregunta">Cargando...</h2>
+                </div>
+                
+                <div id="tv-tablero" class="tablero">
+                </div>
+            </div>
+
+            <!-- BOTTOM: Cámaras OBS -->
+            <div class="tv-bottom">
+                <div class="cam-container cam-presentador">
+                    <div class="scanlines"></div>
+                    <div class="live-badge">REC</div>
+                    <div class="cam-inner"></div>
+                    <div class="cam-label label-host">🎙️ PRESENTADOR</div>
+                </div>
+                <div class="cam-container cam-concursante">
+                    <div class="scanlines"></div>
+                    <div class="live-badge">LIVE</div>
+                    <div class="cam-inner"></div>
+                    <div class="cam-label label-player">🎮 CONCURSANTE</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
